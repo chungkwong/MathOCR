@@ -1,0 +1,124 @@
+0x0393		\mathbf{\Gamma }
+0x0394		\mathbf{\Delta }
+0x0398		\mathbf{\Theta }
+0x039B		\mathbf{\Lambda }
+0x039E		\mathbf{\Xi }
+0x03A0		\mathbf{\Pi }
+0x03A3		\mathbf{\Sigma }
+0x03A5		\mathbf{\Upsilon }
+0x03A6		\mathbf{\Phi }
+0x03A8		\mathbf{\Psi }
+0x03A9		\mathbf{\Omega }
+0xFB00	\textbf{ff}	\mathbf{ff}
+0xFB01	\textbf{fi}	\mathbf{fi}
+0xFB02	\textbf{fl}	\mathbf{fl}
+0xFB03	\textbf{ffi}	\mathbf{ffi}
+0xFB04	\textbf{ffl}	\mathbf{ffl}
+0x0131		\mathbf{\imath }
+0x0237		\mathbf{\jmath }
+0x0060		\grave	H
+0x00B4		\accte	H
+0x02C7		\check	H
+0x02D8		\breve	H
+0x02DA		\mathring	H
+0x00B8		\c	H
+0x00DF	"s	"s
+0x00E6	\ae	\mathbf{\ae }
+0x0153	\oe	\mathbf{\oe }
+0x00F8		\mathbf{\o }
+0x00C6	\AE	\mathbf{\AE }
+0x0152	\OE	\mathbf{\OE }
+0x00D8		\mathbf{\O }
+0x0021	!	!
+0x201D	''	''
+0x0023	\#	\#
+0x0024	\$	\$
+0x0025		\%
+0x0026	\&	\&
+0x0028	(	(
+0x0029	)	)
+0x002A		*
+0x002B		+
+0x002C	,	,
+0x002D	-	-
+0x00AD	-	-
+0x002E	.	.
+0x002F	/	/
+0x0030	0	0
+0x0031	1	1
+0x0032	2	2
+0x0033	3	3
+0x0034	4	4
+0x0035	5	5
+0x0036	6	6
+0x0037	7	7
+0x0038	8	8
+0x0039	9	9
+0x003A	:	:
+0x003B	;	;
+0x00A1	!`	!`
+0x003D		=
+0x00BF	?`	?`
+0x003F	?	?
+0x0040	@	@
+0x0041	\textbf{A}	\mathbf{A}
+0x0042	\textbf{B}	\mathbf{B}
+0x0043	\textbf{C}	\mathbf{C}
+0x0044	\textbf{D}	\mathbf{D}
+0x0045	\textbf{E}	\mathbf{E}
+0x0046	\textbf{F}	\mathbf{F}
+0x0047	\textbf{G}	\mathbf{G}
+0x0048	\textbf{H}	\mathbf{H}
+0x0049	\textbf{I}	\mathbf{I}
+0x004A	\textbf{J}	\mathbf{J}
+0x004B	\textbf{K}	\mathbf{K}
+0x004C	\textbf{L}	\mathbf{L}
+0x004D	\textbf{M}	\mathbf{M}
+0x004E	\textbf{N}	\mathbf{N}
+0x004F	\textbf{O}	\mathbf{O}
+0x0050	\textbf{P}	\mathbf{P}
+0x0051	\textbf{Q}	\mathbf{Q}
+0x0052	\textbf{R}	\mathbf{R}
+0x0053	\textbf{S}	\mathbf{S}
+0x0054	\textbf{T}	\mathbf{T}
+0x0055	\textbf{U}	\mathbf{U}
+0x0056	\textbf{V}	\mathbf{V}
+0x0057	\textbf{W}	\mathbf{W}
+0x0058	\textbf{X}	\mathbf{X}
+0x0059	\textbf{Y}	\mathbf{Y}
+0x005A	\textbf{Z}	\mathbf{Z}
+0x005B		[
+0x201C	``	``
+0x005D		]
+0x02C6		\hat	H
+0x02D9		\dot	H
+0x2018	`	`
+0x0061	\textbf{a}	\mathbf{a}
+0x0062	\textbf{b}	\mathbf{b}
+0x0063	\textbf{c}	\mathbf{c}
+0x0064	\textbf{d}	\mathbf{d}
+0x0065	\textbf{e}	\mathbf{e}
+0x0066	\textbf{f}	\mathbf{f}
+0x0067	\textbf{g}	\mathbf{g}
+0x0068	\textbf{h}	\mathbf{h}
+0x0069	\textbf{i}	\mathbf{i}
+0x006A	\textbf{j}	\mathbf{j}
+0x006B	\textbf{k}	\mathbf{k}
+0x006C	\textbf{l}	\mathbf{l}
+0x006D	\textbf{m}	\mathbf{m}
+0x006E	\textbf{n}	\mathbf{n}
+0x006F	\textbf{o}	\mathbf{o}
+0x0070	\textbf{p}	\mathbf{p}
+0x0071	\textbf{q}	\mathbf{q}
+0x0072	\textbf{r}	\mathbf{r}
+0x0073	\textbf{s}	\mathbf{s}
+0x0074	\textbf{t}	\mathbf{t}
+0x0075	\textbf{u}	\mathbf{u}
+0x0076	\textbf{v}	\mathbf{v}
+0x0077	\textbf{w}	\mathbf{w}
+0x0078	\textbf{x}	\mathbf{x}
+0x0079	\textbf{y}	\mathbf{y}
+0x007A	\textbf{z}	\mathbf{z}
+0x02DD		''
+0x02DC		\tilde	H
+0x00A8		\ddot	H

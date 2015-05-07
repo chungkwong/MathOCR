@@ -1,0 +1,111 @@
+0x0393		\mathit{\Gamma } 
+0x0394		\mathit{\Delta }
+0x0398		\mathit{\Theta }
+0x039B		\mathit{\Lambda }
+0x039E		\mathit{\Xi }
+0x03A0		\mathit{\Pi }
+0x03A3		\mathit{\Sigma }
+0x03A5		\mathit{\Upsilon }
+0x03A6		\mathit{\Phi }
+0x03A8		\mathit{\Psi }
+0x03A9		\mathit{\Omega }
+0x03B1		\alpha 
+0x03B2		\beta 
+0x03B3		\gamma 
+0x03B4		\delta 
+0x03B6		\zeta 
+0x03B7		\eta 
+0x03B8		\theta 
+0x03B9		\iota 
+0x03BA		\kappa 
+0x03BB		\lambda 
+0x03BC		\mu 
+0x03BD		\nu 
+0x03BE		\xi 
+0x03C0		\pi 
+0x03C1		\rho 
+0x03C3		\sigma 
+0x03C4		\tau 
+0x03C5		\upsilon 
+0x03C6		\phi 
+0x03C7		\chi 
+0x03C8		\psi 
+0x03C9		\omega 
+0x03B5		\varepsilon 
+0x03D1		\vartheta 
+0x03D6		\varpi 
+0x03C2		\varsigma 
+0x03D5		\varphi 
+0x21BC		\leftharpoonup 
+0x21BD		\leftharpoondown 
+0x21C0		\rightharpoonup 
+0x21C1		\rightharpoondown 
+0x21A9		\hookleftarrow 
+0x21AA		\hookrightarrow 
+0x22B2		\vartriangleright 
+0x22B3		\vartriangleleft 
+0x002E	.	.
+0x002C	,	,
+0x003C		<
+0x002F	/	/
+0x003E		>
+0x2202		\partial 
+0x0041	\textit{A}	A
+0x0042	\textit{B}	B
+0x0043	\textit{C}	C
+0x0044	\textit{D}	D
+0x0045	\textit{E}	E
+0x0046	\textit{F}	F
+0x0047	\textit{G}	G
+0x0048	\textit{H}	H
+0x0049	\textit{I}	I
+0x004A	\textit{J}	J
+0x004B	\textit{K}	K
+0x004C	\textit{L}	L
+0x004D	\textit{M}	M
+0x004E	\textit{N}	N
+0x004F	\textit{O}	O
+0x0050	\textit{P}	P
+0x0051	\textit{Q}	Q
+0x0052	\textit{R}	R
+0x0053	\textit{S}	S
+0x0054	\textit{T}	T
+0x0055	\textit{U}	U
+0x0056	\textit{V}	V
+0x0057	\textit{W}	W
+0x0058	\textit{X}	X
+0x0059	\textit{Y}	Y
+0x005A	\textit{Z}	Z
+0x2323		\smile 
+0x2322		\frown 
+0x2113		\ell 
+0x0061	\textit{a}	a
+0x0062	\textit{b}	b
+0x0063	\textit{c}	c
+0x0064	\textit{d}	d
+0x0065	\textit{e}	e
+0x0066	\textit{f}	f
+0x0067	\textit{g}	g
+0x0068	\textit{h}	h
+0x0069	\textit{i}	i
+0x006A	\textit{j}	j
+0x006B	\textit{k}	k
+0x006C	\textit{l}	l
+0x006D	\textit{m}	m
+0x006E	\textit{n}	n
+0x006F	\textit{o}	o
+0x0070	\textit{p}	p
+0x0071	\textit{q}	q
+0x0072	\textit{r}	r
+0x0073	\textit{s}	s
+0x0074	\textit{t}	t
+0x0075	\textit{u}	u
+0x0076	\textit{v}	v
+0x0077	\textit{w}	w
+0x0078	\textit{x}	x
+0x0079	\textit{y}	y
+0x007A	\textit{z}	z
+0x0131		\imath 
+0x0237		\jmath 
+0x2118		\wp 
+0x2040		\cat 
