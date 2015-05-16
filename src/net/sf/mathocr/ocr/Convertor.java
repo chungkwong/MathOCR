@@ -48,7 +48,7 @@ public final class Convertor{
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		p2t.put('\\',"\\textbackslash");
+		p2t.put('\\',"\\textbackslash ");
 		p2t.put('&',"\\&");
 		p2t.put('$',"\\$");
 		p2t.put('%',"\\%");
@@ -57,6 +57,12 @@ public final class Convertor{
 		p2t.put('^',"\\^");
 		p2t.put('{',"\\}");
 		p2t.put('}',"\\}");
+		p2t.put('—',"-");
+		p2t.put('\uFB00',"ff");
+		p2t.put('\uFB01',"fi");
+		p2t.put('\uFB02',"fl");
+		p2t.put('\uFB03',"ffi");
+		p2t.put('\uFB04',"ffl");
 		fontname.add("\\mathrm");
 		fontname.add("\\mathtt");
 		fontname.add("\\mathit");

@@ -101,7 +101,7 @@ public final class RecognizePane extends JToolBar implements ActionListener,Mous
 				additional.setText("");
 			}else if(curr instanceof Listing){
 				type.setSelectedIndex(5);
-				additional.setText("");
+				additional.setText(Integer.toString(((Listing)curr).getIndent()));
 			}else if(curr instanceof Heading){
 				type.setSelectedIndex(6);
 				additional.setText(Integer.toString(((Heading)curr).getFontSize()));
@@ -141,7 +141,7 @@ public final class RecognizePane extends JToolBar implements ActionListener,Mous
 								updated=new Paragraph(content,nostart,noend,curr.getLeft(),curr.getRight(),curr.getTop(),curr.getBottom());
 								break;
 							case 5:
-								updated=new Listing(content,Integer.parseInt(additional.getText()),0
+								updated=new Listing(content,Listing.testItem(content),Integer.parseInt(additional.getText())
 								,nostart,noend,curr.getLeft(),curr.getRight(),curr.getTop(),curr.getBottom());
 								break;
 							case 6:

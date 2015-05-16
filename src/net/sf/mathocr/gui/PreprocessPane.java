@@ -164,11 +164,11 @@ public final class PreprocessPane extends JToolBar implements ActionListener,Mou
 				pageEdit.getPage().preprocess(new ColorInvert(checkWhiteOnBlack.isSelected()));
 				break;
 			case "NEXT":
-				if(angle!=0){
-					pageEdit.getPage().preprocessInput(new SkewCorrect(angle));
-				}
 				if(rightcrop!=0){
 					pageEdit.getPage().preprocessInput(new Crop(leftcrop,rightcrop,topcrop,bottomcrop));
+				}
+				if(angle!=0){
+					pageEdit.getPage().preprocessInput(new SkewCorrect(angle));
 				}
 				setEditible(false);
 				pageEdit.getPageIcon().removeMouseListener(this);

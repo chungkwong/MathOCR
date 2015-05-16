@@ -147,7 +147,7 @@ public final class OFRTester extends Box implements ActionListener,FileFilter{
 			page.preprocessByDefault();
 			page.componentAnalysis();
 			CharactersLine line=new CharactersLine(page.getComponentPool().getComponents());
-			result=new LogicalLine(line,true).recognize();
+			result=new LogicalLine(line,env.getBoolean("DISPLAY_EQUATION")).recognize();
 			timeUsed+=(System.currentTimeMillis()-t);
 			if(file.getName().equals(nextFile)){
 				readEntry();

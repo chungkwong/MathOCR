@@ -84,7 +84,8 @@ public final class LaTeXGenerator{
 				boolean hascaption=!((Table)block).getCaption().isEmpty();
 				if(hascaption){
 					str.append("\\begin{table}\n");
-					str.append("\\caption{"+Caption.removePrefix(((Table)block).getCaption())+"}\n");
+					str.append("\\centering\n");
+					str.append("\\caption{"+((Table)block).getCaption()+"}\n");
 				}
 				str.append("\\includegraphics{"+((Table)block).getPath()+"}\n");
 				if(hascaption){
@@ -95,10 +96,11 @@ public final class LaTeXGenerator{
 				boolean hascaption=!((Image)block).getCaption().isEmpty();
 				if(hascaption){
 					str.append("\\begin{figure}\n");
+					str.append("\\centering\n");
 				}
-				str.append("\\includegraphics{"+((Image)block).getPath()+"}\n");
+				str.append("\\includegraphics[scale=0.25]{"+((Image)block).getPath()+"}\n");
 				if(hascaption){
-					str.append("\\caption{"+Caption.removePrefix(((Image)block).getCaption())+"}\n");
+					str.append("\\caption{"+((Image)block).getCaption()+"}\n");
 					str.append("\\end{figure}\n");
 				}
 				pkg.add("graphicx");

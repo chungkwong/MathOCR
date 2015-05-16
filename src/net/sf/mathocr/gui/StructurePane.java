@@ -50,7 +50,7 @@ public final class StructurePane extends JToolBar implements ActionListener,Mous
 		return button;
 	}
 	public void activate(java.util.List<Char> characters){
-		line=new LogicalLine(new CharactersLine(characters),true);
+		line=new LogicalLine(new CharactersLine(characters),env.getBoolean("DISPLAY_EQUATION"));
 		pageEdit.getPageIcon().removeMouseMotionListener(pageEdit.getPageIcon());
 		pageEdit.getPageIcon().addMouseMotionListener(this);
 		pageEdit.getPageIcon().setPainter(this);

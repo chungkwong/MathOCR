@@ -128,10 +128,10 @@ public final class Document{
 					if(block instanceof Caption&&!blocks.isEmpty()){
 						LogicalBlock b=blocks.getLast();
 						if(b instanceof Image&&((Image)b).getCaption().isEmpty()){
-							((Image)b).setCaption(((Caption)block).getContent());
+							((Image)b).setCaption(((Caption)block).getContentNoPrefix());
 							continue;
 						}else if(b instanceof Table&&((Table)b).getCaption().isEmpty()){
-							((Table)b).setCaption(((Caption)block).getContent());
+							((Table)b).setCaption(((Caption)block).getContentNoPrefix());
 							continue;
 						}
 					}
@@ -145,9 +145,9 @@ public final class Document{
 					lastNonFloat=block;
 				}else if(!blocks.isEmpty()&&blocks.getLast() instanceof Caption){
 					if(block instanceof Image)
-						((Image)block).setCaption(((Caption)blocks.pollLast()).getContent());
+						((Image)block).setCaption(((Caption)blocks.pollLast()).getContentNoPrefix());
 					else if(block instanceof Table)
-						((Table)block).setCaption(((Caption)blocks.pollLast()).getContent());
+						((Table)block).setCaption(((Caption)blocks.pollLast()).getContentNoPrefix());
 				}
 				blocks.addLast(block);
 			}

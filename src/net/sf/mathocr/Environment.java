@@ -175,14 +175,15 @@ public final class Environment{
 		env.boolMap.put("USE_MOMENTS_MATCHER",pref.getBoolean("USE_MOMENTS_MATCHER",true));
 		env.boolMap.put("USE_PROJECTION_MATCHER",pref.getBoolean("USE_PROJECTION_MATCHER",true));
 		env.boolMap.put("USE_PIXEL_MATCHER",pref.getBoolean("USE_PIXEL_MATCHER",false));
+		env.boolMap.put("DISPLAY_EQUATION",pref.getBoolean("DISPLAY_EQUATION",false));
 		env.intMap.put("KFILL_WINDOW",pref.getInt("KFILL_WINDOW",3));
 		env.intMap.put("MANUAL_THREHOLD_LIMIT",pref.getInt("MANUAL_THREHOLD_LIMIT",192));
 		env.intMap.put("SAUVOLA_WINDOW",pref.getInt("SAUVOLA_WINDOW",15));
 		env.floatMap.put("SAUVOLA_WEIGHT",pref.getFloat("SAUVOLA_WEIGHT",0.2f));
 		env.strMap.put("THREHOLD_METHOD",pref.get("THREHOLD_METHOD","Sauvola"));
 		env.strMap.put("SKEW_DETECT_METHOD",pref.get("SKEW_DETECT_METHOD","PP"));
-		env.strMap.put("OCR_ENGINE",pref.get("OCR_ENGINE","Ocrad"));
-		env.strMap.put("TESSERACT_PARAMETER",pref.get("TESSERACT_PARAMETER","-psm 6 -l chi_sim"));
+		env.strMap.put("OCR_ENGINE",pref.get("OCR_ENGINE","Native"));
+		env.strMap.put("TESSERACT_PARAMETER",pref.get("TESSERACT_PARAMETER","-psm 6"));// -l chi_sim
 		env.strMap.put("OUTPUT_FOLDER",pref.get("OUTPUT_FOLDER",System.getProperty("user.dir")));
 		env.strMap.put("OUTPUT_FORMAT",pref.get("OUTPUT_FORMAT","LaTeX"));
 		env.strMap.put("EXTRA_DATAFILE",pref.get("EXTRA_DATAFILE",""));

@@ -58,7 +58,7 @@ public final class HTMLGenerator{
 				//	str.append(((Paragraph)block).getContent());
 				//else{
 					while(!lstlv.isEmpty())
-						str.append(lstlv.pop().isNumbered()?"</ol>\n":"\\</ul>\n");
+						str.append(lstlv.pop().isNumbered()?"</ol>\n":"</ul>\n");
 					str.append("<p>"+LaTeXtoHTML(((TextLike)block).getContent())+"</p>\n");
 				//}
 			}else if(block instanceof Listing){
@@ -69,7 +69,7 @@ public final class HTMLGenerator{
 					lstlv.push((Listing)block);
 					str.append(((Listing)block).isNumbered()?"<ol>\n":"<ul>\n");
 				}
-				str.append("<li>"+LaTeXtoHTML(((Listing)block).getContent())+"</li>\n");
+				str.append("<li>"+LaTeXtoHTML(((Listing)block).getContentNoPrefix())+"</li>\n");
 			}else if(block instanceof Heading){
 				while(!lstlv.isEmpty())
 					str.append(lstlv.pop().isNumbered()?"</ol>\n":"</ul>\n");
@@ -94,7 +94,7 @@ public final class HTMLGenerator{
 			}
 		}
 		while(!lstlv.isEmpty())
-			str.append(lstlv.pop().isNumbered()?"</ol>\n":"\\</ul>\n");
+			str.append(lstlv.pop().isNumbered()?"</ol>\n":"</ul>\n");
 		str.append("</body>\n");
 		str.append("</html>\n");
 		return str.toString();

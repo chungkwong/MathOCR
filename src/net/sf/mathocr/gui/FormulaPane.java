@@ -61,7 +61,7 @@ public final class FormulaPane extends PageEditor{
 	}
 	public void showRecognizePane(java.util.List<Char> characters){
 		if(env.getBoolean("SKIP_RECOGNIZE_PANE")){
-			showResult(new LogicalLine(new CharactersLine(characters),true).recognize());
+			showResult(new LogicalLine(new CharactersLine(characters),env.getBoolean("DISPLAY_EQUATION")).recognize());
 		}else{
 			structPane.activate(characters);
 			card.show(rightPane,"STRUCT");

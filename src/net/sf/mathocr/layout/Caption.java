@@ -21,8 +21,8 @@ import java.util.regex.*;
  * A data structure representing caption
  */
 public final class Caption extends TextLike{
-   static final Pattern[] knownStyle=new Pattern[]{Pattern.compile("图\\s[0-9](.*)"),Pattern.compile("表\\s[0-9](.*)")
-   ,Pattern.compile("Fig\\.[0-9](.*)"),Pattern.compile("Figure\\s[0-9](.*)"),Pattern.compile("Table\\s[0-9](.*)")};
+   static final Pattern[] knownStyle=new Pattern[]{Pattern.compile("图\\s[0-9]:?(.*)"),Pattern.compile("表\\s[0-9]:?(.*)")
+   ,Pattern.compile("Fig\\.[0-9](.*)"),Pattern.compile("Figure\\s[0-9]:?(.*)"),Pattern.compile("Table\\s[0-9]:?(.*)")};
 	public Caption(TextLine line){
 		super(line);
 	}
@@ -51,11 +51,10 @@ public final class Caption extends TextLike{
 		return false;
 	}
 	/**
-	 * Remove caption prefix from a String
-	 * @param content content pobbibly with prefix
+	 * Get content without caption prefix
 	 * @return content without label
 	 */
-	public static String removePrefix(String content){
+	public String getContentNoPrefix(){
 		for(int i=0;i<knownStyle.length;i++){
 			Matcher matcher=knownStyle[i].matcher(content);
 			if(matcher.matches())

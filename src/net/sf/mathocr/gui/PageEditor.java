@@ -18,14 +18,16 @@
 package net.sf.mathocr.gui;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.filechooser.*;
 import net.sf.mathocr.layout.*;
 import static net.sf.mathocr.Environment.env;
 /**
  * A GUI component being used to show a page
  */
-public class PageEditor extends JPanel implements ChangeListener{
+public class PageEditor extends JPanel implements ChangeListener,ActionListener{
 	Page page;
 	DocumentEditor docEdit;
 	protected CardLayout card=new CardLayout();
@@ -36,6 +38,7 @@ public class PageEditor extends JPanel implements ChangeListener{
 	RecognizePane recognizePane;
 	PageIcon icon;
 	JSpinner scaleIn=new JSpinner(new SpinnerNumberModel(100,1,1000,25));
+	static JFileChooser jfc=new JFileChooser();
 	public PageEditor(DocumentEditor docEdit){
 		super(new BorderLayout());
 		this.page=page;
@@ -57,7 +60,11 @@ public class PageEditor extends JPanel implements ChangeListener{
 		scaleIn.addChangeListener(this);
 		btPane.add(scaleIn);
 		btPane.add(new JLabel("%"));
+		JButton shot=new JButton(env.getTranslation("SAVE_CURRENT"));
+		shot.addActionListener(this);
+		btPane.add(shot);
 		add(btPane,BorderLayout.SOUTH);
+		jfc.setFileFilter(new FileNameExtensionFilter(env.getTranslation("PICTURE_FILE"),"png"));
 	}
 	public void showComponentPane(){
 		page.componentAnalysis();
@@ -117,5 +124,19 @@ public class PageEditor extends JPanel implements ChangeListener{
 	}
 	public void stateChanged(ChangeEvent e){
 		icon.setScale(((Integer)scaleIn.getValue())/100.0);
+	}
+	public void actionPerformed(ActionEvent e){
+		if(jfc.showSaveDialog(null)==JFileChooser.APPROVE_OPTION)
+			try{
+				BufferedImage img=new BufferedImage(icon.getIconWidth(),icon.getIconHeight(),BufferedImage.TYPE_INT_RGB);
+				Graphics2D g=img.createGraphics();
+				g.setColor(Color.WHITE);
+				g.fillRect(0,0,icon.getIconWidth(),icon.getIconHeight());
+				icon.paintIcon(icon,g,0,0);
+				g.dispose();
+				javax.imageio.ImageIO.write(img,"PNG",jfc.getSelectedFile());
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
 	}
 }

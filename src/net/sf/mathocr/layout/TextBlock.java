@@ -122,6 +122,7 @@ public final class TextBlock implements BlockType{
 			}
 			line.recognize();
 			String content=line.getText();
+			//System.out.println(content+"\t"+line.getAlignment());
 			int lstType=Listing.testItem(line.getText()),align=line.getAlignment();
 			TextLike lb=null;
 			if(line.isDisplayFormula()){
@@ -146,6 +147,7 @@ public final class TextBlock implements BlockType{
 			line=lines.hasNext()?lines.next():null;
 			while(line!=null){
 				line.recognize();
+				//System.out.println(line.getText()+"\t"+line.getAlignment());
 				if(!possCont[align][line.getAlignment()]&&!(lb instanceof Paragraph&&line.isDisplayFormula()))
 					break;
 				lb.addTextLine(line);
