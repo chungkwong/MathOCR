@@ -1,79 +1,20 @@
-# MathOCR : A printed scientific document recognition system
+# MathOCR
+
+_A printed scientific document recognition system_
 
 **Warning: MathOCR is still in pre-alpha stage, recognition result may not be good enough for practical purpose.**
 
-MathOCR is a printed scientific document recognition system written in pure Java.
-MathOCR has the functionality of image preprocessing, layout analysis and character recognition,
-especially the ability to recognize mathematical expression.
-MathOCR can work do not depends on other OCR software.
+## Introduction
 
-MathOCR is released under the terms of GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+MathOCR is a printed scientific document recognition system written in pure Java, it is released under the terms of GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-## Technique summary
+MathOCR has the functionality of image preprocessing, layout analysis and character recognition, especially the ability to recognize mathematical expression. MathOCR can work without dependency on external libraries other than the standard Java distribution, however, it can also be used as a front-end to OCR system like [Tesseract](https://code.google.com/p/tesseract-ocr/), [GNU Ocrad](http://www.gnu.org/software/ocrad/ocrad.html) or [GOCR](http://jocr.sourceforge.net/).
 
-1. For each input image(page):
-	1. Convert input image into gray-scale image
-	2. Optionally apply filter(s):
-		- Mean value filter
-		- Median value filter
-	3. Convert gray-scale image into binarized image using one of:
-		- Predefined threhold value
-		- Global threhold value by Otsu method
-		- Adaptive threhold by Sauvola method
-	4. Optionally apply filter(s)：
-		- kFill
-		- Invert
-		- Dilation
-		- Erosion
-	5. Detect and fix skew:
-		- Piecewise painting method
-		- Piecewise covering method
-		- Projection
-		- Crossing number
-		- Hough transform
-		- Cross-corrlation
-		- Nearest neighbors clustering
-	6. Connected component analysis
-	7. Optionally remove component that is too small or too close to page border
-	8. Page segmentation:
-		- Recursive XY cut
-	9. Reading order sort
-	10. Classify each block into text, image or table
-	11. For each text block
-		1. Split it into text line:
-			- Projection
-		2. Recognize each line:
-			- Built-in OCR engine:
-				1. Split text line into character：
-					- Projection
-				2. Recognize each character:
-					- SVM
-					- MSE
-				3. Structural analysis
-			- External OCR engine
-				- Tesseract
-				- GOCR
-				- Ocrad
-				- Baidu cloud
-		3. Classify line into paragraph, heading, etc.:
-			- Alignment inside block
-2. Merge the recognition result of the pages
-3. Export to specified output format, for example：
-	- Plain text
-	- HTML+MathML
-	- LaTeX
+MathOCR project is started at March 2014 as a undergraduate research project to develop a printed mathematical formula recognition system in Sun Yat-Sen University, it was first released at September 2014. Later on, it continued development as the project of the undergraduate's thesis of the developer and became a document recognition system.
 
-## History
+## Release notes
 
-### Working on (Starting from 2018-07)
-
-After three year, MathOCR is being largely rewritten:
-- Maven is used as build tool
-- Better modulity: layout, segmentation, output format can be pluged in
-- A SVM recognition algorithm based on directional feature is provided
-- HTML+MathML output is supported
-
-### MathOCR 0.0.3 released(2015-05-07)
+### MathOCR 0.0.3 released[2015-05-07]
 
 Major changes:
 
@@ -84,11 +25,11 @@ Major changes:
 *   A build-in command line interface
 *   Image format PNM is supported
 
-### MathOCR 0.0.2 released(2014-11-29)
+### MathOCR 0.0.2 released[2014-11-29]
 
 Minor changes to improve structural analysis algorithm.
 
-### MathOCR 0.0.1 released(2014-9-29)
+### MathOCR 0.0.1 released[2014-9-29]
 
 This is the first release of MathOCR, features:
 
@@ -100,79 +41,74 @@ This is the first release of MathOCR, features:
 *   Possible to extend symbol set by user
 *   Original structural analysis system using bottom-up approach
 
-# MathOCR：一个印刷体科技文档识别系统
+## Technique summary
 
-**警告：MathOCR仍处于准预览阶段，识别效果对于实用目的而言可能远不足够.**
+### Image preprocessing
 
-MathOCR是一个用Java语言编写的印刷体科技文档识别系统。
-MathOCR具备基本的图形预处理、版面分析和字符识别能力，特别是能够识别数学公式。
-MathOCR不依赖于其它OCR软件。
+Standard approaches is used, these are the procedures:
 
-MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下发布。
+1.  Convert input image into gray-scale image
+2.  Convert gray-scale image into binarized image
+3.  Apply filter(s) (optional)
+4.  Skew detection and correction(optional)
 
-## 工作原理
+### Layout analysis
 
-1. 对于每一页：
-	1. 把图像灰度化
-	2. 可选的图像预处理，目前支持：
-		- 均值滤波
-		- 中值滤波
-	3. 二值化，目前支持
-		- 固定阀值
-		- Otsu方法
-		- Sauvola方法
-	4. 可选的图像预处理，目前支持：
-		- kFill
-		- 反转黑底白字
-	5. 检测和修正倾斜，目前支持：
-		- 分片填涂方法
-		- 分片覆盖方法
-		- 投影方法
-		- 交错数法
-		- 霍夫变换方法
-		- 行间相关法
-		- 最近邻方法
-	6. 连通域分析
-	7. 可选地去除边缘或过小的连通域
-	8. 版面分割，目前支持：
-		- 递归XY切分
-	9. 对各块进行排序以模拟阅读顺序
-	10. 判定各块分别是文本、图像还是表格
-	11. 对于文本块
-		1. 把文本块切分为行，日前支持：
-			- 投影
-		2. 识别各行的内容，目前支持：
-			- 内置识别器
-				1. 字符切分，目前支持：
-					- 连通域分析
-				2. 单字符识别，目前支持：
-					- SVM
-					- 距离
-				3. 结构分析（有待完善，如支持数学公式和语言模型）
-			- 外部识别器
-				- Tesseract
-				- GOCR
-				- Ocrad
-				- 百度云
-		3. 把文本行组合为段落、标题等等，目前支持：
-			- 块内对齐
-2. 合并各页
-3. 导出为指定输出格式（有待美化），目前部分支持：
-	- 纯文本
-	- HTML+MathML
-	- LaTeX
+These are the procedures:
 
-## 历史
+1.  Connected components analysis based on disjoint-set data structure
+2.  Page segmentation based recursive XY-cut
+3.  Reading order sort based on topology sort
+4.  Text-Graphics classification using components' height
+5.  Extract text line using projection
+6.  Logical block classification using alignment and OCR result
+7.  Paragraph growing using alignment
 
-### 重新上路（2018年7月以来）
+### Optical character recognition
 
-在荒废三年之后，MathOCR正在进行大幅度的重写：
-- 使用Maven作为构建工具
-- 采用更模块化的设计，可方便地插入版面分析算法、字符分割算法和输出格式等等
-- 提供基于方向特征的支持向量机字符识别方法
-- 支持HTML+MathML输出
+These are the normal procedures:
 
-### MathOCR 0.0.3 发布（2015-05-07）
+1.  Construct initial list of candidates for each glyph
+2.  Use a sequence of matchers to filter out some candidates
+3.  Template matching based on Hausdorff distance is used to rank the remaining candidates
+4.  Combine glyphs to form character
+
+To match special symbols like root sign and big delimiter, template is generated dynamically.
+
+### Optical formula recognition
+
+These are the procedures:
+
+1.  Fix some mis-recognition using the information from other symbols
+2.  Construct a initial symbol adjoin graph
+3.  Rewrite the symbol adjoin graph using some rules
+4.  If the graph cannot be reduced to only one vertex, recognition fail
+
+## Acknowledge
+
+The default data files bundled with MathOCR are derive works of amsfonts by American Mathematical Society. The code used to read PNM files is derive from the JAI library.
+
+In addition, I would like to thank my supervisor Dr. Peixing Li, this program would not be here without his encouragement.
+
+
+
+# MathOCR
+
+_一个印刷体科技文档识别系统_
+
+**警告：MathOCR仍处于准预览阶段，识别效果对于实用目的而言可能并不足够.**
+
+## MathOCR简介
+
+MathOCR是一个用Java语言编写的印刷体科技文档识别系统，在GNU通用公共许可证版本3或（按你的意愿）更新版本下发布。
+
+MathOCR具备基本的图形预处理、版面分析和字符识别能力，特别是能够识别数学公式。MathOCR可以不依赖于标准Java库以外的库而独立工作，但也可以作为Tesseract、GNU Ocrad或GOCR等OCR系统的前端。
+
+MathOCR项目在2014年作为中山大学大学生创新训练计划项目《图片中数学公式的自动识别》的副产物而于2014年3月开始开发，同年9月发布首个版本，是少有的作为自由软件的印刷体数学公式识别系统。其后，在2014年12月至2015年4月又作为开发者的本科毕业论文项目加入了文档逻辑版面分析功能，从而扩展为一个印刷体科技文档识别系统。
+
+## 发行注记
+
+### MathOCR 0.0.3 发布[2015-05-07]
 
 这个版本有较大改动，包括：
 
@@ -183,11 +119,11 @@ MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下
 *   内置命令行界面
 *   新增支持图片格式PNM
 
-### MathOCR 0.0.2 发布（2014-11-29）
+### MathOCR 0.0.2 发布[2014-11-29]
 
 这个版本主要是对数学公式结构分析算法作出了局部的改进。
 
-### MathOCR 0.0.1 发布（2014-9-29）
+### MathOCR 0.0.1 发布[2014-9-29]
 
 这是MathOCR的首个公开发布的版本，它的特性包括：
 
@@ -198,3 +134,19 @@ MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下
 *   原创的数学符号识别系统
 *   用户可自行扩充支持的符号集
 *   原创的结构分析系统
+
+## 技术参考
+
+主要技术的描述可参考以下文档：
+
+*   [印刷体科技文档识别技术实践研究](https://github.com/chungkwong/MathOCR/blob/master/doc/MathOCR-report-0.0.3.pdf)描述了MathOCR 0.0.3的设计，这也是开发者的本科毕业论文
+*   [图片中印刷体数学公式的自动识别](https://github.com/chungkwong/MathOCR/blob/master/doc/MathOCR-report-0.0.2.pdf)描述了MathOCR 0.0.2的设计
+*   [图片中印刷体数学公式的自动识别——MathOCR的设计与实现](https://github.com/chungkwong/MathOCR/blob/master/doc/MathOCR-present-0.0.2.pdf)简单介绍了MathOCR 0.0.2的设计，这也是开发者的创新训练计划答辩用幻灯片
+
+产生MathOCR 0.0.3自带识别数据的训练数据在font目录获取。
+
+## 致谢
+
+MathOCR自带的数据文件为美国数学学会ams­fonts的派生品，而用来读入PNM文件的代码取自JAI库，特此致谢。
+
+此外，还要感谢我的本科毕业论文导师黎培兴老师，正是他的鼓励使这个程序从构想变为现实。

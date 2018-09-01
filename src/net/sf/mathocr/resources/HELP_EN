@@ -1,0 +1,115 @@
+MathOCR Manual
+
+
+Document recognition
+
+(1) Choose "Document Recognition" in the menu "File"
+(2) Select all page images in the dialog
+(3) Interactive image preprocess(Can be skiped in preference)
+	- Click "Crop" and two point in the image to crop image
+	- Click "Mean Filter"、"Median Filter"、"kFill" or "Noise Remove" to apply corresponding filter
+	- Click "Sauvola's method"、"Otsu's method" or "Manual" to apply corresponding threhold method(a must)
+	- Click "Invert color" to invert image if "Check white on black" is not choosen or black pixels dominate the image
+	- Click "Skew Detection" to detect skew using the current default skew detection method and show a guess in the text field below
+	- Click two point in the image can also show skew angle guess given the two point determine the baseline
+	- Click "Skew Correction" to rotate the image by specified radian(positive for anti-clockwise)
+	- Click "Undo" to discard all changes
+	- Click "Next" to enter next stage
+(4) Interactive connected component analysis(Can be skiped in preference)
+	- Click "Delete" and than a component's bounding box to delete it
+	- Click "Merge" and than two components' bounding box to merge them
+	- Click "Split vertically" and than a point in a component's bounding box to split it into two, a upper one and a lower one
+	- Click "Split horizontally" and than a point in a component's bounding box to split it into two, a left one and a right one
+	- Click "Clean page border" to remove all the components that is close to image border
+	- Click "Next" to enter next stage
+(5) Interactive physical analysis(Can be skiped in preference)
+	- Page segment can be modidied in a way similar to (4) 
+	- Click "Classify region" to detect block type automaticly
+	- Click "Change type", choose a type and than click a block will change the type of the specified block
+	- Click "Reading order sort" to sort the blocks
+	- Click "Rearrange reading order" and than click the blocks one-by-one in expected order to rearrange the order of blocks
+	- Click "Extract lines" to extract text line from text block
+	- Click "Split line" and a point in a text line to split the text line into two
+	- Click "Merge with next line" and than a text line to merge it the text line below
+	- Click "Next" to enter next stage
+(6) Interactive logical analysis(Can be skiped in preference)
+	- Click to select a logical text block to be edited
+	- Click "Delete" to delete the logical block selected
+	- Choose type from a combo box
+	- Change content in the text area
+	- Click "Modify" to apply changes
+	- Click "Next" to enter next stage
+(7) Display output
+	- Output format can be LaTeX or HTML
+
+
+Mathematical formula recognition
+
+(1) Choose "Formula Recognition" or "Formula Recognition(From screenshot)" in the menu "File"
+(2) Choose image
+	- If "Formula Recognition" is choosen, choose all formula images in the dialog
+	- If "Formula Recognition(From screenshot)", select area from your screen using the red frame, and then click on top left corner of the frame
+(3) Interactive image preprocess, just like that in document recognition
+(4) Interactive connected component, just like that in document recognition
+(5) Interactive character recognition(Can be skiped in preference)
+	- Each symbol is shown, extra attention should be paid on those labeled in green
+	- Move your mouse to a symbol and then the candidates will be shown together with a certainty
+	- Choose "Delete" and click on a symbol, the recognition of the symbol will be deleted
+	- Choose "Modify" and click on a symbol，then choose or create a symbol using through a dialog，the recognition of the symbol will be modified
+	- Choose "Add" and click on two point, then choose or create a symbol using through a dialog, the region identified by the two point will be regarded as a symbol with recognition
+	- Click "Next" to enter next stage
+(6) Interactive structural analysis(Can be skiped in preference)
+	- Each subexpression is shown
+	- Click "Stepwise merge" will make a merge
+	- Click "Next" to enter next stage
+(7) Display output
+	- Output format is LaTeX
+
+
+Font training（for advanced user only）
+
+(1) Choose "Font training" in the menu "Tool"
+(2) Choose all the font files to be used，corresponding lists of character should located at the same directory with suffix replaced by ".nam"
+(3) Generated data file will be placed in the same directory with suffix ".lg"
+(4) If "Generate Characters Picture" is selected，pictures will be placed in the same directory with suffix ".png"
+(5) If "Show Data" is selected, some information of the characters and glyphs will be shown in a table
+
+注：
+(1)List of character is a plain text file encoded in UTF-8，each character yield a line，containing code point，text mode LaTeX code and math mode LaTeX code，the format is like：
+0x0041	A	A
+(2)font size is measured in point
+
+
+Preference
+
+(1) Choose "Preference" from the menu "File"
+(2) Modify settings
+	-  For boolean options, select or un-select the checkbox
+	-  For other options, change the value in the text field and than press enter，new value must meet requirement mentioned in tooltip text
+
+
+Using MathOCR in command line
+
+Usage:
+java -jar MathOCR.jar -cli [options] files...
+To learn more about the options, type:
+java -jar MathOCR.jar -cli
+
+
+Using MathOCR in your java program（for developer）
+
+(1) Place the JAR file of MathOCR into classpath
+(2) Import classes
+import net.sf.mathocr.*;
+import net.sf.mathocr.layout.*;
+(*) Set parameter
+Use the method of the object net.sf.mathocr.Environment.env
+(3) Construct a Document object and add pages
+Document doc=new Document();
+while(/*there are more pages*/)
+	doc.addPage(new Page(/*File, URL, InputStream or BufferedImage*/,doc));
+(4) Get the recognition result
+String result=BatchProcessor.recognize(doc,/*BatchProcessor.LATEX or BatchProcessor.HTML*/);
+
+If you intend to recognize mathematical expression only instead of a document, replace (3) and (4) by
+(3') BatchProcessor.recognizeFormula(bufferedImage);
