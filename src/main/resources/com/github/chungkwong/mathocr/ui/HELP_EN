@@ -1,0 +1,83 @@
+MathOCR Manual
+
+
+Document recognition
+
+(1) Choose "Document Recognition" in the menu "File"
+(2) Select all page images in the dialog
+(3) Interactive image preprocess(Can be skiped in preference)
+	- Click "Crop" and two point in the image to crop image
+	- Click "Mean Filter"、"Median Filter"、"kFill" or "Noise Remove" to apply corresponding filter
+	- Click "Sauvola's method"、"Otsu's method" or "Manual" to apply corresponding threhold method(a must)
+	- Click "Invert color" to invert image if "Check white on black" is not choosen or black pixels dominate the image
+	- Click "Skew Detection" to detect skew using the current default skew detection method and show a guess in the text field below
+	- Click two point in the image can also show skew angle guess given the two point determine the baseline
+	- Click "Skew Correction" to rotate the image by specified radian(positive for anti-clockwise)
+	- Click "Undo" to discard all changes
+	- Click "Next" to enter next stage
+(4) Interactive connected component analysis(Can be skiped in preference)
+	- Click "Delete" and than a component's bounding box to delete it
+	- Click "Merge" and than two components' bounding box to merge them
+	- Click "Split vertically" and than a point in a component's bounding box to split it into two, a upper one and a lower one
+	- Click "Split horizontally" and than a point in a component's bounding box to split it into two, a left one and a right one
+	- Click "Clean page border" to remove all the components that is close to image border
+	- Click "Next" to enter next stage
+(5) Interactive physical analysis(Can be skiped in preference)
+	- Page segment can be modidied in a way similar to (4)
+	- Click "Classify region" to detect block type automaticly
+	- Click "Change type", choose a type and than click a block will change the type of the specified block
+	- Click "Reading order sort" to sort the blocks
+	- Click "Rearrange reading order" and than click the blocks one-by-one in expected order to rearrange the order of blocks
+	- Click "Extract lines" to extract text line from text block
+	- Click "Split line" and a point in a text line to split the text line into two
+	- Click "Merge with next line" and than a text line to merge it the text line below
+	- Click "Next" to enter next stage
+(6) Interactive logical analysis(Can be skiped in preference)
+	- Click to select a logical text block to be edited
+	- Click "Delete" to delete the logical block selected
+	- Choose type from a combo box
+	- Change content in the text area
+	- Click "Modify" to apply changes
+	- Click "Next" to enter next stage
+(7) Display output
+	- Output format can be plain text, LaTeX or HTML
+
+
+
+Font training（for advanced user only）
+
+(1) Choose "Font training" in the menu "Tool"
+(2) Choose model type and features
+(3) Add samples
+    a. Choose font(Family, size, scale, italic, bold)
+    b. Choose characters, specified by regular expression
+    c. Click "Add"
+(4) Click "Font training" and then select output directory
+
+
+Preference
+
+(1) Choose "Preference" from the menu "File"
+(2) Modify settings
+	-  For boolean options, select or un-select the checkbox
+	-  For other options, change the value in the text field and than press enter，new value must meet requirement mentioned in tooltip text
+
+
+Using MathOCR in command line
+
+Usage:
+java -jar MathOCR.jar -cli [options] files...
+To learn more about the options, type:
+java -jar MathOCR.jar -cli
+
+
+Using MathOCR in your java program（for developer）
+
+(1) Place the JAR file of MathOCR into classpath
+(2) Import classes
+import com.github.chungkwong.mathocr.*;
+Set parameter
+Use the method of the object com.github.chungkwong.mathocr.Environment.ENVIRONMENT
+(3) Put the image of the pages into a List(Accept File, URL, InputStream or BufferedImage)
+(4) Recognition(Assume the List above is denoted by `pages`)
+new PipeLine(pages.iterator()).getResult();
