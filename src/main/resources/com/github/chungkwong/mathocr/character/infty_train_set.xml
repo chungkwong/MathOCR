@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2018 Chan Chung Kwong
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<training>
+	<models>
+		<model>SVM</model>
+		<model>LINEAR</model>
+	</models>
+	<features>
+		<feature>ASPECT_RATIO</feature>
+		<feature>GRADIENT</feature>
+	</features>
+	<data>
+		<set>
+			<fonts>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eusb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eusm10.pfb</font>
+				<font>/usr/share/fonts/truetype/freefont/FreeSerif.ttf</font>
+				<font>/usr/share/fonts/truetype/freefont/FreeSans.ttf</font>
+				<font>/usr/share/fonts/truetype/freefont/FreeMono.ttf</font>
+			</fonts>
+			<styles>
+				<style>PLAIN</style>
+			</styles>
+			<sizes>
+				<size>10</size>
+			</sizes>
+			<scales>
+				<scale>8</scale>
+			</scales>
+			<codepoints>
+				<list>
+					!#$&amp;()*+,./
+					0123456789:;&lt;=>?@
+					ABCDEFGHIJKLMNOPQRSTUVWXYZ\^_
+					abcdefghijklmnopqrstuvwxyz|
+					§©¬¯±·º
+					ÀÂÄÉÓÔÖ×Üß
+					àáâäçèéêëóôöøü
+					ˇ˙˜
+					ΓΔΘΛΞΠΣΦΨΩ
+					αβγδεζηθικλμνξπρςστυφχψωϕ
+					ℵ
+					‐–—‘’“”•…′″⃗
+					←→↓↦↪⇒⇔
+					∀∂∃∅∇∈∉∋∏
+					∐∑−√∞∤∫∼
+					≃≅≈
+					≠≡≢≤≥≦≧≫≺≻≼≽
+					⊀⊂⊃⊄⊆⊇⊈⊊⊋⊕⊗⊥
+					⋀⋁⋂⋃⋊⋔⋯
+					⌊⌋⌣〈〉⏟
+					□★
+					ﬀﬁﬂﬃﬄ
+				</list>
+			</codepoints>
+		</set>
+	</data>
+</training>

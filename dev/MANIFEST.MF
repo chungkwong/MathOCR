@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Created-By: 1.7.0_65
-Main-Class: net.sf.mathocr.Main
-SplashScreen-Image: net/sf/mathocr/resources/splash.jpg
-Permissions: all-permissions
