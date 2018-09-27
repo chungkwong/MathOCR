@@ -22,28 +22,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<features>
 		<feature>ASPECT_RATIO</feature>
 		<feature>GRADIENT</feature>
+		<feature>GRID</feature>
+		<feature>MOMENTS</feature>
 	</features>
 	<data>
 		<set>
 			<fonts>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmb10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/euler/eufb10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/euler/eusb10.pfb</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/euler/eusm10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eusb10.pfb</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eusm10.pfb</font>
 				<font>/usr/share/fonts/truetype/freefont/FreeSerif.ttf</font>
 				<font>/usr/share/fonts/truetype/freefont/FreeSans.ttf</font>
 				<font>/usr/share/fonts/truetype/freefont/FreeMono.ttf</font>
@@ -69,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					ˇ˙˜
 					ΓΔΘΛΞΠΣΦΨΩ
 					αβγδεζηθικλμνξπρςστυφχψωϕ
-					℘ℵ™
+					℘ℵℓ™
 					‐–—‘’“”†‡•…′″⃗
 					←↑→↓↔↕↖↗↘↙↚↛↜↝↞↟
 					↠↡↢↣↤↥↦↧↨↩↪↫↬↭↮↯

@@ -35,7 +35,6 @@ public class NaiveCharacterSegmenter implements CharacterSegmenter{
 	}
 	@Override
 	public List<List<NavigableSet<CharacterCandidate>>> segment(TextLine block){
-		List<NavigableSet<CharacterCandidate>> characters=new ArrayList<>();
 		CharacterRecognizer recognizer=CharacterRecognizers.REGISTRY.get();
 		CharacterList list=ModelManager.getCharacterList();
 		Object model=ModelManager.getModel(recognizer.getModelType());

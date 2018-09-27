@@ -26,14 +26,10 @@ import static com.github.chungkwong.mathocr.Environment.ENVIRONMENT;
 public class ModelManager{
 	private static String path;
 	private static CharacterList list;
+	private static ErrataList erratas;
 	private static Map<String,Object> models=new HashMap<>();
 	public static CharacterList getCharacterList(){
-		String currPath=ENVIRONMENT.getString("DATA_DIRECTORY");
-		if(!currPath.equals(path)||list==null){
-			list=getCharacterList(new File(currPath));
-			path=currPath;
-			models.clear();
-		}
+		loadDefault();
 		return list;
 	}
 	public static CharacterList getCharacterList(File data){
@@ -44,7 +40,28 @@ public class ModelManager{
 			return null;
 		}
 	}
+	public static ErrataList getErrataList(){
+		loadDefault();
+		return erratas;
+	}
+	public static ErrataList getErrataList(File data){
+		if(new File(data,"erratas.json").exists()){
+			return ErrataList.read(new File(data,"erratas.json"));
+		}else{
+			return erratas;
+		}
+	}
+	private static void loadDefault(){
+		String currPath=ENVIRONMENT.getString("DATA_DIRECTORY");
+		if(!currPath.equals(path)||list==null){
+			list=getCharacterList(new File(currPath));
+			erratas=getErrataList(new File(currPath));
+			path=currPath;
+			models.clear();
+		}
+	}
 	public static Object getModel(String type){
+		loadDefault();
 		if(!models.containsKey(type)){
 			models.put(type,getModel(type,new File(path)));
 		}

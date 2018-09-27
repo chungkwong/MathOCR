@@ -61,6 +61,16 @@ public final class ConnectedComponent implements Externalizable,Comparable<Conne
 	/**
 	 * Construct a empty ConnectedComponent with given bounds
 	 *
+	 * @param box
+	 */
+	public ConnectedComponent(BoundBox box){
+		this(box.getLeft(),box.getRight(),box.getTop(),box.getBottom());
+		//addRunLength(new RunLength(cordTop,cordLeft,cordRight-cordLeft));
+		//addRunLength(new RunLength(cordBottom,cordLeft,cordRight-cordLeft));
+	}
+	/**
+	 * Construct a empty ConnectedComponent with given bounds
+	 *
 	 * @param cordLeft left bound
 	 * @param cordRight right bound
 	 * @param cordTop upper bound
@@ -363,65 +373,6 @@ public final class ConnectedComponent implements Externalizable,Comparable<Conne
 		return cross;
 	}
 	/**
-	 * Compute horizontal crossing characteristic
-	 *
-	 * @return horizontal crossing characteristic
-	 */
-	public String getHorizontalChar(){
-		Iterator<RunLength> iter=runlengths.iterator();
-		RunLength curr=iter.hasNext()?iter.next():null;
-		byte last=-1;
-		String ch="";
-		for(int i=cordTop;i<=cordBottom;i++){
-			byte count=0;
-			while(curr!=null&&curr.getY()==i){
-				++count;
-				curr=iter.hasNext()?iter.next():null;
-			}
-			if(i==cordTop||last!=count){
-				last=count;
-				ch+=Character.forDigit(count,36);
-			}
-		}
-		return ch;
-	}
-	/**
-	 * Compute vertical crossing characteristic
-	 *
-	 * @return vertical crossing characteristic
-	 */
-	public String getVerticalChar(){
-		//byte[] count=new byte[getWidth()],prev=new byte[getWidth()];
-		byte[] count=getVerticalCrossing();
-		String ch="";
-		/*RunLength curr=runlengths.first();
-		for(int i=cordTop;i<=cordBottom;i++){
-			while(curr!=null&&curr.getY()==i){
-				for(int j=0,k=curr.getX()-cordLeft;j<=curr.getCount();j++,k++){
-					if(prev[k]==0)
-						++count[k];
-					prev[k]=-1;
-				}
-				curr=runlengths.higher(curr);
-			}
-			for(int k=0;k<prev.length;k++)
-				prev[k]=(byte)(prev[k]==-1?1:0);
-		}*/
-		LinkedList<Byte> parts=new LinkedList<Byte>();
-		byte pre=count[0];
-		parts.add(pre);
-		ch+=Character.forDigit(pre,36);
-		for(int j=1;j<count.length;j++){
-			byte curr=count[j];
-			if(pre!=curr){
-				parts.add(curr);
-				ch+=Character.forDigit(curr,36);
-			}
-			pre=curr;
-		}
-		return ch;
-	}
-	/**
 	 * Compute power
 	 *
 	 * @param base the base
@@ -641,6 +592,9 @@ public final class ConnectedComponent implements Externalizable,Comparable<Conne
 	 */
 	public String toString(){
 		byte[][] pixels=toPixelArray();
+		if(pixels.length==0){
+			return "";
+		}
 		int height=pixels.length, width=pixels[0].length;
 		StringBuilder str=new StringBuilder((width+1)*height);
 		for(int i=0;i<height;i++){
@@ -705,5 +659,21 @@ public final class ConnectedComponent implements Externalizable,Comparable<Conne
 	}
 	public BoundBox getBox(){
 		return new BoundBox(cordLeft,cordRight,cordTop,cordBottom);
+	}
+	public void fix(){
+		Collections.sort(runlengths);
+		ListIterator<RunLength> iterator=runlengths.listIterator();
+		if(iterator.hasNext()){
+			RunLength prev=iterator.next();
+			while(iterator.hasNext()){
+				RunLength curr=iterator.next();
+				if(curr.getY()==prev.getY()&&curr.getX()<=prev.getX()+prev.getCount()){
+					prev.reset(prev.getY(),prev.getX(),Math.max(prev.getX()+prev.getCount(),curr.getX()+curr.getCount())-prev.getX());
+					iterator.remove();
+				}else{
+					prev=curr;
+				}
+			}
+		}
 	}
 }

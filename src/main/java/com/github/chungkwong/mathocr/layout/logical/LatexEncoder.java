@@ -15,15 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.layout.logical;
-import com.github.chungkwong.mathocr.text.structure.Fraction;
-import com.github.chungkwong.mathocr.text.structure.Matrix;
-import com.github.chungkwong.mathocr.text.structure.Superscript;
-import com.github.chungkwong.mathocr.text.structure.Line;
-import com.github.chungkwong.mathocr.text.structure.Symbol;
-import com.github.chungkwong.mathocr.text.structure.Over;
-import com.github.chungkwong.mathocr.text.structure.Span;
-import com.github.chungkwong.mathocr.text.structure.Radical;
-import com.github.chungkwong.mathocr.text.structure.Subscript;
+import com.github.chungkwong.mathocr.text.structure.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -138,6 +130,11 @@ public class LatexEncoder implements DocumentEncoder{
 		}
 		return str.toString();
 	}
+	public static String encode(Span span){
+		StringBuilder buf=new StringBuilder();
+		encode(span,true,buf);
+		return buf.toString();
+	}
 	private static void encode(List<Line> lines,StringBuilder buf){
 		for(Line line:lines){
 			encode(line,false,buf);
@@ -177,6 +174,71 @@ public class LatexEncoder implements DocumentEncoder{
 			encode(((Superscript)span).getContent(),true,buf);
 			buf.append('}');
 		}else if(span instanceof Over){
+			Over over=((Over)span);
+			if(over.getOver() instanceof Symbol){
+				String name=getHatName(((Symbol)over.getOver()).getCodePoint());
+				if(name!=null){
+					buf.append('\\').append(name).append('{');
+					encode(over.getContent(),math,buf);
+					buf.append('}');
+					return;
+				}
+			}
+			buf.append("\\stackrel{");
+			encode(over.getOver(),math,buf);
+			buf.append("}{");
+			encode(over.getContent(),math,buf);
+			buf.append("}");
+		}else if(span instanceof Under){
+			Under under=((Under)span);
+			if(under.getUnder() instanceof Symbol){
+				String name=getLegName(((Symbol)under.getUnder()).getCodePoint());
+				if(name!=null){
+					buf.append('\\').append(name).append('{');
+					encode(under.getContent(),math,buf);
+					buf.append('}');
+					return;
+				}
+			}
+			buf.append("\\stackrel{");
+			encode(under.getContent(),math,buf);
+			buf.append("}{");
+			encode(under.getUnder(),math,buf);
+			buf.append("}");
+		}else if(span instanceof UnderOver){
+			UnderOver underover=((UnderOver)span);
+			if(underover.getContent() instanceof Symbol){
+				int codePoint=((Symbol)underover.getUnder()).getCodePoint();
+				if(isBigOperator(codePoint)){
+					buf.appendCodePoint(codePoint).append("^{");
+					encode(underover.getOver(),math,buf);
+					buf.append("}_{");
+					encode(underover.getUnder(),math,buf);
+					buf.append('}');
+					return;
+				}else if(codePoint=='⏞'){
+					buf.append("\\overbrace{");
+					encode(underover.getUnder(),math,buf);
+					buf.append("}^{");
+					encode(underover.getOver(),math,buf);
+					buf.append('}');
+					return;
+				}else if(codePoint=='⏟'){
+					buf.append("\\underbrace{");
+					encode(underover.getOver(),math,buf);
+					buf.append("}_{");
+					encode(underover.getUnder(),math,buf);
+					buf.append('}');
+					return;
+				}
+			}
+			buf.append("\\begin{array}{c}");
+			encode(underover.getOver(),math,buf);
+			buf.append("\\\\");
+			encode(underover.getContent(),math,buf);
+			buf.append("\\\\");
+			encode(underover.getUnder(),math,buf);
+			buf.append("\\end{array}");
 		}else if(span instanceof Fraction){
 			buf.append("\\frac{");
 			encode(((Fraction)span).getNumerator(),true,buf);
@@ -242,6 +304,49 @@ public class LatexEncoder implements DocumentEncoder{
 			}
 		}
 		return latex.toString();
+	}
+	private static String getHatName(int codePoint){
+		switch(codePoint){
+			case '˙':
+				return "dot";
+			case '¨':
+				return "ddot";
+			case 'ˆ':
+				return "hat";
+			case '¯':
+				return "overline";
+			case '´':
+				return "acute";
+			case 'ˇ':
+				return "check";
+			case 'ˋ':
+				return "grave";
+			case '˘':
+				return "breve";
+			case '°':
+				return "mathring";
+			case '˜':
+				return "tilde";
+			case '⏞':
+				return "overbrace";
+			case '\u20D7':
+				return "vec";
+			default:
+				return null;
+		}
+	}
+	private static String getLegName(int codePoint){
+		switch(codePoint){
+			case '_':
+				return "underline";
+			case '⏟':
+				return "underbrace";
+			default:
+				return null;
+		}
+	}
+	private static boolean isBigOperator(int codePoint){
+		return "∏∐∑∧∨∩∪∫∬∭∮∯∰∱∲∳⊓⊔⊕⊖⊗⊘⊙⊚⊛⊜⊝".indexOf(codePoint)!=-1;
 	}
 	static{
 		Properties text=new Properties();

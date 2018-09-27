@@ -19,12 +19,12 @@ import com.github.chungkwong.mathocr.common.BoundBox;
 import com.github.chungkwong.mathocr.common.ConnectedComponent;
 import java.awt.*;
 import java.awt.font.*;
+import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.*;
-import javax.swing.*;
 /**
  *
  * @author Chan Chung Kwong
@@ -137,19 +137,31 @@ public class DataSet{
 		});
 	}
 	public static void main(String[] args) throws IOException,FontFormatException{
-		Font font=Font.createFont(Font.TYPE1_FONT,new File("/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb"));
-		JFrame f=new JFrame();
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-		JLabel label=new JLabel("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-		label.setFont(font.deriveFont(12.0f));
-		f.add(label);
-		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-		for(int i=0;i<0xFFFF;i++){
-			if(font.canDisplay(i)){
-				System.out.println(Integer.toHexString(i)+":"+new String(new int[]{i},0,1));
-			}
+		Font font=Font.createFont(Font.TYPE1_FONT,new File("/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb")).deriveFont(10.0f).deriveFont(AffineTransform.getScaleInstance(4.0,4.0));
+		for(int i=0;i<font.getNumGlyphs();i++){
+			//if(font.canDisplay(i)){
+			//System.out.println(Integer.toHexString(i)+":"+new String(new int[]{i},0,1));
+			System.out.println(Integer.toHexString(i));
+			System.out.println(getComponent(font,i));
+			//}
 		}
+	}
+	private static ConnectedComponent getComponent(Font font,int glyphCode){
+		FontRenderContext context=new FontRenderContext(null,false,true);
+		GlyphVector glyphVector=font.createGlyphVector(context,new int[]{glyphCode});
+		float x=(float)glyphVector.getVisualBounds().getX();
+		float y=(float)glyphVector.getVisualBounds().getY();
+		int width=(int)(glyphVector.getVisualBounds().getWidth()+0.5);
+		int height=(int)(glyphVector.getVisualBounds().getHeight()+0.5);
+		if(width==0||height==0){
+			return new ConnectedComponent();
+		}
+		BufferedImage bi=new BufferedImage(width,height,BufferedImage.TYPE_BYTE_BINARY);
+		Graphics2D g2d=bi.createGraphics();
+		g2d.setColor(Color.WHITE);
+		g2d.fillRect(0,0,width,height);
+		g2d.setColor(Color.BLACK);
+		g2d.drawGlyphVector(glyphVector,-x,-y);
+		return new ConnectedComponent(bi);
 	}
 }

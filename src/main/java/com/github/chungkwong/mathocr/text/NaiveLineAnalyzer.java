@@ -15,15 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.text;
+import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.text.structure.Fraction;
 import com.github.chungkwong.mathocr.text.structure.Matrix;
 import com.github.chungkwong.mathocr.text.structure.Superscript;
 import com.github.chungkwong.mathocr.text.structure.Line;
 import com.github.chungkwong.mathocr.text.structure.Span;
 import com.github.chungkwong.mathocr.text.structure.Subscript;
-import com.github.chungkwong.mathocr.common.Pair;
 import com.github.chungkwong.mathocr.common.BoundBox;
-import com.github.chungkwong.mathocr.character.CharacterCandidate;
 import com.github.chungkwong.mathocr.text.structure.Symbol;
 import java.util.*;
 import java.util.stream.*;
@@ -37,15 +36,11 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 	public NaiveLineAnalyzer(){
 	}
 	@Override
-	public Line analysis(List<List<NavigableSet<CharacterCandidate>>> characters){
-		Optional<Pair<Line,Double>> best=characters.stream().map((list)->layout(list)).max(Comparator.comparingDouble((pair)->pair.getValue()));
-		return best.map((pair)->pair.getKey()).orElseGet(()->new Line(Collections.emptyList()));
-	}
-	private Pair<Line,Double> layout(List<NavigableSet<CharacterCandidate>> candidates){
+	public Line analysis(List<NavigableSet<CharacterCandidate>> candidates){
 		List<Symbol> characters=resolve(candidates);
 		double score=0;
 		int[] baseLineAndSize=getBaseLineAndSize(characters);
-		return new Pair<>(layoutH(characters,baseLineAndSize[0],baseLineAndSize[1]),score);
+		return layoutH(characters,baseLineAndSize[0],baseLineAndSize[1]);
 	}
 	private Span layoutV(List<List<Span>> columns,int baseline,int fontsize){
 		List<List<Span>> spans=new ArrayList<>(columns.size());
@@ -126,17 +121,26 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 			if(m==2&&array.get(0).get(0).getFontSize()<fontsize*7/10&&array.get(1).get(0).getFontSize()<fontsize*7/10){
 				return new Line(Arrays.asList(new Subscript(array.get(1).get(0)),new Superscript(array.get(0).get(0))));
 			}
+			if(m==2&&array.get(0).get(0) instanceof Symbol&&isHorizontalLine((Symbol)array.get(0).get(0))){
+				if(array.get(1).get(0) instanceof Symbol&&isHorizontalLine((Symbol)array.get(1).get(0))){
+					BoundBox box=BoundBox.union(array.get(0).get(0).getBox(),array.get(1).get(0).getBox());
+					return new Symbol(ModelManager.getCharacterList().getCharacter('=').toCandidate(box,1.0));
+				}
+			}
 			if(m==3&&array.get(1).get(0) instanceof Symbol){
 				Span over=array.get(0).get(0);
 				Symbol middle=(Symbol)array.get(1).get(0);
 				Span under=array.get(2).get(0);
-				if(middle.getBox().getHeight()<=fontsize/10
-						&&middle.getBox().getWidth()>Math.max(over.getBox().getRight(),under.getBox().getRight())-Math.min(over.getBox().getLeft(),under.getBox().getLeft())*9/10){
+				if(isHorizontalLine(middle)
+						&&middle.getBox().getWidth()>(Math.max(over.getBox().getRight(),under.getBox().getRight())-Math.min(over.getBox().getLeft(),under.getBox().getLeft()))*9/10){
 					return new Fraction(over,under);
 				}
 			}
 		}
 		return new Matrix(array);
+	}
+	private boolean isHorizontalLine(Symbol symbol){
+		return "-¯_‐–—⌢⌣".indexOf(symbol.getCodePoint())!=-1;
 	}
 	private Line layoutH(List<? extends Span> spans,int baseline,int fontsize){
 		Collections.sort(spans,Comparator.comparingInt((s)->s.getBox().getLeft()));
@@ -246,7 +250,7 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 			BoundBox box=new BoundBox(last.getBox().getRight(),curr.getBox().getLeft(),
 					Math.min(curr.getBox().getTop(),last.getBox().getTop()),
 					Math.max(curr.getBox().getBottom(),last.getBox().getBottom()));
-			return new Symbol(' ',Symbol.DEFAULT_FAMILY,localSize,Symbol.DEFAULT_STYLE,box,Math.max(curr.getBaseLine(),last.getBaseLine()));
+			return new Symbol(' ',Symbol.DEFAULT_FAMILY,localSize,Symbol.DEFAULT_STYLE,box,Math.max(curr.getBaseLine(),last.getBaseLine()),1.0);
 		}else{
 			return null;
 		}
@@ -266,14 +270,12 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 		return characters;
 	}
 	private Symbol select(NavigableSet<CharacterCandidate> candidates,double baseLine,double size){
-		Stream<CharacterCandidate> stream=candidates.stream();
-		if(candidates.first().getScore()>0){
-			stream=stream.filter((c)->c.getScore()>0);
-		}
-		return new Symbol(stream.max(Comparator.comparingDouble((c)->c.getScore()*SCORE_COEF
-				-Math.abs((c.getBaseLine()-baseLine)/size)*LINE_COEF-Math.abs((c.getFontSize()-size)/size)*SIZE_COEF)).get());
+		return new Symbol(candidates.first());
+//Stream<CharacterCandidate> stream=candidates.stream();
+		//return new Symbol(stream.max(Comparator.comparingDouble((c)->c.getScore()*SCORE_COEF
+		//		-Math.abs((c.getBaseLine()-baseLine)/size)*LINE_COEF-Math.abs((c.getFontSize()-size)/size)*SIZE_COEF)).get());
 	}
-	private static final int SCORE_COEF=2, SIZE_COEF=1, LINE_COEF=1;
+	//private static final int SCORE_COEF=2, SIZE_COEF=1, LINE_COEF=1;
 	private int[] predictBaseLineAndSize(List<NavigableSet<CharacterCandidate>> characters){
 		int[] baseLines=characters.stream().mapToInt((c)->c.first().getBaseLine()).toArray();
 		int[] sizes=characters.stream().mapToInt((c)->c.first().getFontSize()).toArray();

@@ -20,17 +20,25 @@ import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.*;
 /**
  *
  * @author Chan Chung Kwong
  */
 public class CharacterList{
 	private final List<CharacterPrototype> prototypes;
+	private Map<Integer,CharacterPrototype> index;
 	public CharacterList(List<CharacterPrototype> prototypes){
 		this.prototypes=prototypes;
 	}
 	public List<CharacterPrototype> getCharacters(){
 		return prototypes;
+	}
+	public CharacterPrototype getCharacter(int codePoint){
+		if(index==null){
+			index=prototypes.stream().collect(Collectors.toMap((p)->p.getCodePoint(),(p)->p));
+		}
+		return index.get(codePoint);
 	}
 	public void write(File file) throws IOException{
 		BufferedWriter out=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),StandardCharsets.UTF_8));

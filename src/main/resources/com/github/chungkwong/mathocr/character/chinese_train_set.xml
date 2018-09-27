@@ -21,22 +21,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</models>
 	<features>
 		<feature>ASPECT_RATIO</feature>
-		<feature>GRADIENT</feature>
+		<feature>FULL_GRADIENT</feature>
+		<feature>GRID</feature>
+		<feature>MOMENTS</feature>
+		<feature>CROSSING</feature>
 	</features>
 	<data>
 		<set>
 			<fonts>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/opentype/public/fandol/FandolFang-Regular.otf</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/opentype/public/fandol/FandolHei-Regular.otf</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/opentype/public/fandol/FandolKai-Regular.otf</font>
-				<font>/usr/local/texlive/2018/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-DemiLight.ttc</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Light.ttc</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolFang-Regular.otf</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolHei-Regular.otf</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolKai-Regular.otf</font>
+				<font>/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf</font>
+				<font>/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc</font>
+				<font>/usr/share/fonts/truetype/wqy/wqy-microhei.ttc</font>
+				<font>/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf</font>
 				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc</font>
-				<font>/usr/share/fonts/opentype/noto/NotoSansCJK-Thin.ttc</font>
 				<font>/usr/share/fonts/truetype/arphic/ukai.ttc</font>
 				<font>/usr/share/fonts/truetype/arphic/uming.ttc</font>
 			</fonts>
@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</styles>
 			<sizes>
 				<size>10</size>
+				<size>12</size>
 			</sizes>
 			<scales>
 				<scale>8</scale>

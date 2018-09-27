@@ -18,7 +18,6 @@ package com.github.chungkwong.mathocr.character.feature;
 import com.github.chungkwong.mathocr.common.ConnectedComponent;
 import com.github.chungkwong.mathocr.common.RunLength;
 import com.github.chungkwong.mathocr.character.VectorFeature;
-import com.github.chungkwong.mathocr.common.Bitmap;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
@@ -31,177 +30,35 @@ import java.util.*;
  */
 public class Gradient implements VectorFeature{
 	public static final String NAME="GRADIENT";
+	public static final String FULL_NAME="FULL_GRADIENT";
 	private final int m, n;
+	private final boolean contour;
 	/**
 	 * Create a gradient feature
 	 *
 	 * @param m rows of grid
 	 * @param n columns of grid
+	 * @param contour only consider contour
 	 */
-	public Gradient(int m,int n){
+	public Gradient(int m,int n,boolean contour){
 		this.m=m;
 		this.n=n;
+		this.contour=contour;
 	}
 	@Override
 	public int getDimension(){
 		return m*n*4;
 	}
+	public static final byte NONE=0, HORIZONTAL=1, VERTICAL=2, DIAG_DOWN=4, DIAG_UP=8;
+	private static final int DD=3, DX=2;
 	@Override
 	public double[] extract(ConnectedComponent component){
-		final byte none=0, horizontal=1, vertical=2, diagDown=4, diagUp=8;
-		final int dd=3, dx=2;
 		double[] vec=new double[m*n*4];
 		int h=component.getHeight(), w=component.getWidth();
-		int[] nL=new int[w];
-		int[] nwL=new int[w];
-		int[] neL=new int[w];
-		int[] stroke=new int[w*h];
-		byte[] direction=new byte[w*h];
-		Iterator<RunLength> iterator=component.getRunLengths().iterator();
-		Collections.sort(component.getRunLengths());
-		RunLength rl=iterator.hasNext()?iterator.next():null;
-		for(int i=0, ind=0;i<=h;i++){
-			int j=0;
-			int nwNext=0;
-			while(rl!=null&&rl.getY()-component.getTop()==i){
-				for(;j<rl.getX()-component.getLeft();j++,ind++){
-					for(int k=1;k<=nL[j];k++){
-						if(nL[j]*dx<stroke[ind-k*w]){
-							stroke[ind-k*w]=nL[j]*dx;
-							direction[ind-k*w]=vertical;
-						}else if(nL[j]*dx==stroke[ind-k*w]){
-							direction[ind-k*w]|=vertical;
-						}
-					}
-					nL[j]=0;
-					for(int k=1;k<=nwL[j];k++){
-						int pos=ind-k*w-k;
-						if(nwL[j]*dd<stroke[pos]){
-							stroke[pos]=nwL[j]*dd;
-							direction[pos]=diagDown;
-						}else if(nwL[j]*dd==stroke[pos]){
-							direction[pos]|=diagDown;
-						}
-					}
-					nwL[j]=nwNext;
-					nwNext=0;
-					for(int k=1;k<=neL[j];k++){
-						int pos=ind-k*w+k;
-						if(neL[j]*dd<stroke[pos]){
-							stroke[pos]=neL[j]*dd;
-							direction[pos]=diagUp;
-						}else if(neL[j]*dd==stroke[pos]){
-							direction[pos]|=diagUp;
-						}
-					}
-					if(j>0){
-						neL[j-1]=0;
-					}
-				}
-				if(rl.getX()==component.getLeft()){
-					for(int k=1;k<=neL[0];k++){
-						int pos=ind-k*w+k;
-						if((neL[0]+1)*dd<stroke[pos]){
-							stroke[pos]=(neL[0]+1)*dd;
-							direction[pos]=diagUp;
-						}else if((neL[0]+1)*dd==stroke[pos]){
-							direction[pos]|=diagUp;
-						}
-					}
-					stroke[ind]=(rl.getCount()+1)*dx;
-					if(stroke[ind]<(neL[0]+1)*dd){
-						direction[ind]=horizontal;
-					}else if(stroke[ind]==(neL[0]+1)*dd){
-						direction[ind]|=horizontal;
-					}else{
-						stroke[ind]=(neL[0]+1)*dd;
-						direction[ind]=diagUp;
-					}
-					if(j!=0){
-						++nL[j];
-					}
-					int tmp=nwL[j]+1;
-					nwL[j]=nwNext;
-					nwNext=tmp;
-				}else{
-					stroke[ind]=(rl.getCount()+1)*dx;
-					direction[ind]=horizontal;
-					++nL[j];
-					int tmp=nwL[j]+1;
-					nwL[j]=nwNext;
-					nwNext=tmp;
-					neL[j-1]=neL[j]+1;
-				}
-				++j;
-				++ind;
-				for(;j<rl.getX()+rl.getCount()+1-component.getLeft();j++,ind++){
-					stroke[ind]=(rl.getCount()+1)*dx;
-					direction[ind]=horizontal;
-					++nL[j];
-					int tmp=nwL[j]+1;
-					nwL[j]=nwNext;
-					nwNext=tmp;
-					if(j>0){
-						neL[j-1]=neL[j]+1;
-					}
-				}
-				if(rl.getX()+rl.getCount()==component.getRight()){
-					for(int k=0;k<=nwNext-1;k++){
-						int pos=ind-1-k*w-k;
-						if(nwNext*dd<stroke[pos]){
-							stroke[pos]=nwNext*dd;
-							direction[pos]=diagDown;
-						}else if(nwNext*dd==stroke[pos]){
-							direction[pos]|=diagDown;
-						}
-					}
-				}
-				rl=iterator.hasNext()?iterator.next():null;
-			}
-			for(;j<w;j++,ind++){
-				for(int k=1;k<=nL[j];k++){
-					if(nL[j]*dx<stroke[ind-k*w]){
-						stroke[ind-k*w]=nL[j]*dx;
-						direction[ind-k*w]=vertical;
-					}else if(nL[j]*dx==stroke[ind-k*w]){
-						direction[ind-k*w]|=vertical;
-					}
-				}
-				nL[j]=0;
-				for(int k=1;k<=nwL[j];k++){
-					int pos=ind-k*w-k;
-					if(nwL[j]*dd<stroke[pos]){
-						stroke[pos]=nwL[j]*dd;
-						direction[pos]=diagDown;
-					}else if(nwL[j]*dd==stroke[pos]){
-						direction[pos]|=diagDown;
-					}
-				}
-				nwL[j]=nwNext;
-				nwNext=0;
-				for(int k=1;k<=neL[j];k++){
-					int pos=ind-k*w+k;
-					if(neL[j]*dd<stroke[pos]){
-						stroke[pos]=neL[j]*dd;
-						direction[pos]=diagUp;
-					}else if(neL[j]*dd==stroke[pos]){
-						direction[pos]|=diagUp;
-					}
-				}
-				if(j>0){
-					neL[j-1]=0;
-				}
-			}
-		}
-//		for(int i=0, ind=0;i<h;i++){
-//			for(int j=0;j<w;j++,ind++){
-//				System.out.print(direction[ind]);
-//			}
-//			System.out.println();
-//		}
 		double scale=Math.max(h*1.0/m,w*1.0/n);
 		double a=m*0.5-(component.getBottom()+component.getTop()+1)*0.5/scale;
 		double b=n*0.5-(component.getLeft()+component.getRight()+1)*0.5/scale;
+		byte[] direction=getStrokeDirection(component);
 		int[] ptv=new int[m+1], pth=new int[n+1];
 		for(int i=0;i<=m;i++){
 			ptv[i]=(int)(scale*(i-a));
@@ -209,7 +66,6 @@ public class Gradient implements VectorFeature{
 		for(int j=0;j<=n;j++){
 			pth[j]=(int)(scale*(j-b));
 		}
-		Bitmap map=Bitmap.from(component);
 		for(int i=0, ind=0;i<m;i++){
 			for(int j=0;j<n;j++,ind+=4){
 				for(int y=ptv[i];y<ptv[i+1];y++){
@@ -221,16 +77,23 @@ public class Gradient implements VectorFeature{
 							continue;
 						}
 						int pos=(y-component.getTop())*w+(x-component.getLeft());
-						if((direction[pos]&horizontal)!=0){//FIXME
+						if(contour&&y!=component.getTop()&&y!=component.getBottom()&&x!=component.getLeft()&&x!=component.getRight()){
+							if(direction[pos-1]!=NONE&&direction[pos+1]!=NONE
+									&&direction[pos-w]!=NONE&&direction[pos-w-1]!=NONE&&direction[pos-w+1]!=NONE
+									&&direction[pos+w]!=NONE&&direction[pos+w-1]!=NONE&&direction[pos+w+1]!=NONE){
+								continue;
+							}
+						}
+						if((direction[pos]&HORIZONTAL)!=0){
 							++vec[ind];
 						}
-						if((direction[pos]&vertical)!=0){
+						if((direction[pos]&VERTICAL)!=0){
 							++vec[ind+1];
 						}
-						if((direction[pos]&diagDown)!=0){
+						if((direction[pos]&DIAG_DOWN)!=0){
 							++vec[ind+2];
 						}
-						if((direction[pos]&diagUp)!=0){
+						if((direction[pos]&DIAG_UP)!=0){
 							++vec[ind+3];
 						}
 					}
@@ -250,10 +113,184 @@ public class Gradient implements VectorFeature{
 		}
 		return vec;
 	}
+	public static byte[] getStrokeDirection(ConnectedComponent component){
+		int h=component.getHeight(), w=component.getWidth();
+		int[] nL=new int[w];
+		int[] nwL=new int[w];
+		int[] neL=new int[w];
+		int[] stroke=new int[w*h];
+		byte[] direction=new byte[w*h];
+		Iterator<RunLength> iterator=component.getRunLengths().iterator();
+		Collections.sort(component.getRunLengths());
+		RunLength rl=iterator.hasNext()?iterator.next():null;
+		for(int i=0, ind=0;i<=h;i++){
+			int j=0;
+			int nwNext=0;
+			while(rl!=null&&rl.getY()-component.getTop()==i){
+				for(;j<rl.getX()-component.getLeft();j++,ind++){
+					for(int k=1;k<=nL[j];k++){
+						if(nL[j]*DX<stroke[ind-k*w]){
+							stroke[ind-k*w]=nL[j]*DX;
+							direction[ind-k*w]=VERTICAL;
+						}else if(nL[j]*DX==stroke[ind-k*w]){
+							direction[ind-k*w]|=VERTICAL;
+						}
+					}
+					nL[j]=0;
+					for(int k=1;k<=nwL[j];k++){
+						int pos=ind-k*w-k;
+						if(nwL[j]*DD<stroke[pos]){
+							stroke[pos]=nwL[j]*DD;
+							direction[pos]=DIAG_DOWN;
+						}else if(nwL[j]*DD==stroke[pos]){
+							direction[pos]|=DIAG_DOWN;
+						}
+					}
+					nwL[j]=nwNext;
+					nwNext=0;
+					for(int k=1;k<=neL[j];k++){
+						int pos=ind-k*w+k;
+						if(neL[j]*DD<stroke[pos]){
+							stroke[pos]=neL[j]*DD;
+							direction[pos]=DIAG_UP;
+						}else if(neL[j]*DD==stroke[pos]){
+							direction[pos]|=DIAG_UP;
+						}
+					}
+					if(j>0){
+						neL[j-1]=0;
+					}
+				}
+				if(rl.getX()==component.getLeft()){
+					for(int k=1;k<=neL[0];k++){
+						int pos=ind-k*w+k;
+						if((neL[0]+1)*DD<stroke[pos]){
+							stroke[pos]=(neL[0]+1)*DD;
+							direction[pos]=DIAG_UP;
+						}else if((neL[0]+1)*DD==stroke[pos]){
+							direction[pos]|=DIAG_UP;
+						}
+					}
+					stroke[ind]=(rl.getCount()+1)*DX;
+					if(stroke[ind]<(neL[0]+1)*DD){
+						direction[ind]=HORIZONTAL;
+					}else if(stroke[ind]==(neL[0]+1)*DD){
+						direction[ind]|=HORIZONTAL;
+					}else{
+						stroke[ind]=(neL[0]+1)*DD;
+						direction[ind]=DIAG_UP;
+					}
+					if(j!=0){
+						++nL[j];
+					}
+					int tmp=nwL[j]+1;
+					nwL[j]=nwNext;
+					nwNext=tmp;
+				}else{
+					stroke[ind]=(rl.getCount()+1)*DX;
+					direction[ind]=HORIZONTAL;
+					++nL[j];
+					int tmp=nwL[j]+1;
+					nwL[j]=nwNext;
+					nwNext=tmp;
+					neL[j-1]=neL[j]+1;
+				}
+				++j;
+				++ind;
+				for(;j<rl.getX()+rl.getCount()+1-component.getLeft();j++,ind++){
+					stroke[ind]=(rl.getCount()+1)*DX;
+					direction[ind]=HORIZONTAL;
+					++nL[j];
+					int tmp=nwL[j]+1;
+					nwL[j]=nwNext;
+					nwNext=tmp;
+					if(j>0){
+						neL[j-1]=neL[j]+1;
+					}
+				}
+				if(rl.getX()+rl.getCount()==component.getRight()){
+					for(int k=0;k<=nwNext-1;k++){
+						int pos=ind-1-k*w-k;
+						if(nwNext*DD<stroke[pos]){
+							stroke[pos]=nwNext*DD;
+							direction[pos]=DIAG_DOWN;
+						}else if(nwNext*DD==stroke[pos]){
+							direction[pos]|=DIAG_DOWN;
+						}
+					}
+				}
+				rl=iterator.hasNext()?iterator.next():null;
+			}
+			for(;j<w;j++,ind++){
+				for(int k=1;k<=nL[j];k++){
+					if(nL[j]*DX<stroke[ind-k*w]){
+						stroke[ind-k*w]=nL[j]*DX;
+						direction[ind-k*w]=VERTICAL;
+					}else if(nL[j]*DX==stroke[ind-k*w]){
+						direction[ind-k*w]|=VERTICAL;
+					}
+				}
+				nL[j]=0;
+				for(int k=1;k<=nwL[j];k++){
+					int pos=ind-k*w-k;
+					if(nwL[j]*DD<stroke[pos]){
+						stroke[pos]=nwL[j]*DD;
+						direction[pos]=DIAG_DOWN;
+					}else if(nwL[j]*DD==stroke[pos]){
+						direction[pos]|=DIAG_DOWN;
+					}
+				}
+				nwL[j]=nwNext;
+				nwNext=0;
+				for(int k=1;k<=neL[j];k++){
+					int pos=ind-k*w+k;
+					if(neL[j]*DD<stroke[pos]){
+						stroke[pos]=neL[j]*DD;
+						direction[pos]=DIAG_UP;
+					}else if(neL[j]*DD==stroke[pos]){
+						direction[pos]|=DIAG_UP;
+					}
+				}
+				if(j>0){
+					neL[j-1]=0;
+				}
+			}
+		}
+//		for(int i=0, ind=0;i<h;i++){
+//			for(int j=0;j<w;j++,ind++){
+//				System.out.print(direction[ind]);
+//			}
+//			System.out.println();
+//		}
+//		try{
+//			BufferedImage image=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+//			int[] dat=new int[w*h];
+//			for(int i=0;i<direction.length;i++){
+//				dat[i]=0x00000000;
+//				if((direction[i]&horizontal)!=0){
+//					dat[i]|=0xFFFF0000;
+//				}
+//				if((direction[i]&vertical)!=0){
+//					dat[i]|=0xFF00FF00;
+//				}
+//				if((direction[i]&diagDown)!=0){
+//					dat[i]|=0xFF0000FF;
+//				}
+//				if((direction[i]&diagUp)!=0){
+//					dat[i]|=0xFF0000FF;
+//				}
+//			}
+//			image.setRGB(0,0,w,h,dat,0,w);
+//			ImageIO.write(image,"png",new File("/tmp/strokes.png"));
+//		}catch(IOException ex){
+//			Logger.getLogger(Gradient.class.getName()).log(Level.SEVERE,null,ex);
+//		}
+		return direction;
+	}
 	public static void main(String[] args){
 		Font font=Font.decode(Font.SERIF).deriveFont(24).deriveFont(AffineTransform.getScaleInstance(10,10));
-		ConnectedComponent component=getComponent(font,'+');
-		System.out.println(Arrays.toString(new Gradient(3,3).extract(component)));
+		ConnectedComponent component=getComponent(font,'永');
+		System.out.println(Arrays.toString(new Gradient(3,3,false).extract(component)));
 	}
 	private static ConnectedComponent getComponent(Font font,int codePoint){
 		FontRenderContext context=new FontRenderContext(null,false,true);

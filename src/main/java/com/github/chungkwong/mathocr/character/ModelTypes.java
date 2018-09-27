@@ -15,9 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.character;
-import com.github.chungkwong.mathocr.character.classifier.DistanceModelType;
-import com.github.chungkwong.mathocr.character.classifier.LinearModelType;
-import com.github.chungkwong.mathocr.character.classifier.SvmModelType;
+import com.github.chungkwong.mathocr.character.classifier.*;
 import com.github.chungkwong.mathocr.Registry;
 /**
  *
@@ -29,5 +27,6 @@ public class ModelTypes{
 		REGISTRY.register(LinearModelType.NAME,new LinearModelType());
 		REGISTRY.register(SvmModelType.NAME,new SvmModelType());
 		REGISTRY.register(DistanceModelType.NAME,new DistanceModelType());
+		//REGISTRY.register(RandomForestModelType.NAME,new RandomForestModelType());
 	}
 }

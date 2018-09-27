@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.ui;
-import com.github.chungkwong.mathocr.text.LineAnalyzers;
 import com.github.chungkwong.mathocr.text.CharacterSegmenters;
 import com.github.chungkwong.mathocr.text.TextLine;
 import com.github.chungkwong.mathocr.layout.logical.Page;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.stream.*;
 import javax.swing.*;
 import static com.github.chungkwong.mathocr.Environment.ENVIRONMENT;
+import com.github.chungkwong.mathocr.text.*;
 /**
  *
  * @author Chan Chung Kwong
@@ -113,7 +113,7 @@ public class CharacterInspector extends Inspector<Pair<TextLine,BufferedImage>,P
 				}
 				break;
 			case "NEXT":
-				JOptionPane.showMessageDialog(null,LineAnalyzers.REGISTRY.get().analysis(candidates).toString());
+				JOptionPane.showMessageDialog(null,BuiltinLineRecognizer.recognize(candidates).toString());
 				ret(null);
 				return;
 		}
@@ -208,7 +208,7 @@ public class CharacterInspector extends Inspector<Pair<TextLine,BufferedImage>,P
 				continue;
 			}
 			CharacterCandidate c=ele.first();
-			if(c.getScore()>0.9){
+			if(c.getScore()>0.5){
 				g2d.setColor(Color.BLUE);
 			}else{
 				g2d.setColor(Color.GREEN);

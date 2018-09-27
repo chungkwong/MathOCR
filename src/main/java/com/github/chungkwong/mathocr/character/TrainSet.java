@@ -80,12 +80,18 @@ public class TrainSet{
 		return new TrainSet(classifier,features,data);
 	}
 	public void train(File directory){
-		train().train(classifier,directory);
+		train(directory,true);
 	}
-	public DataSet train(){
+	public void train(File directory,boolean addSimpleSample){
+		train(addSimpleSample).train(classifier,directory);
+	}
+	public DataSet train(boolean addSpecialSample){
 		DataSet dataSet=new DataSet(features);
 		for(CombinedSet combinedSet:data){
 			combinedSet.apply(dataSet);
+		}
+		if(addSpecialSample){
+			new SpecialCharacter(4.0f).addTo(dataSet);
 		}
 		return dataSet;
 	}

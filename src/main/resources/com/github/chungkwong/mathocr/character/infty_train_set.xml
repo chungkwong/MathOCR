@@ -23,6 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<features>
 		<feature>ASPECT_RATIO</feature>
 		<feature>GRADIENT</feature>
+		<feature>GRID</feature>
+		<feature>MOMENTS</feature>
+		<feature>CROSSING</feature>
 	</features>
 	<data>
 		<set>

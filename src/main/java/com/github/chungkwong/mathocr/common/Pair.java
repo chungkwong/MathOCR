@@ -20,7 +20,7 @@ import java.util.*;
  *
  * @author Chan Chung Kwong
  */
-public class Pair<K,V>{
+public class Pair<K,V> implements Map.Entry<K,V>{
 	private final K key;
 	private final V value;
 	public Pair(K key,V value){
@@ -43,5 +43,13 @@ public class Pair<K,V>{
 		hash=67*hash+Objects.hashCode(this.key);
 		hash=67*hash+Objects.hashCode(this.value);
 		return hash;
+	}
+	@Override
+	public String toString(){
+		return "("+key+","+value+")";
+	}
+	@Override
+	public V setValue(V value){
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

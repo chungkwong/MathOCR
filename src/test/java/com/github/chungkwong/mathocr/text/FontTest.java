@@ -17,11 +17,14 @@
 package com.github.chungkwong.mathocr.text;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.character.classifier.*;
+import com.github.chungkwong.mathocr.character.feature.*;
 import com.github.chungkwong.mathocr.common.*;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.image.*;
+import java.util.*;
+import java.util.List;
 /**
  *
  * @author Chan Chung Kwong
@@ -31,13 +34,14 @@ public class FontTest{
 		System.out.println("Exact:");
 		int[] codePoint="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".codePoints().toArray();
 		Font[] base=new Font[]{Font.decode("FreeMono"),Font.decode("FreeSans"),Font.decode("FreeSerif")};
-		float[] size=new float[]{12,24,48};
+		float[] size=new float[]{8,10,12};
 		int[] style=new int[]{Font.PLAIN,Font.ITALIC,Font.BOLD};
 		Font[] test=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getScaleInstance(8,8)});
 		Font[] train=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getScaleInstance(2,2)});
 		CharacterRecognizer recognizer=new LinearClassifier(1);
 		//CharacterRecognizer recognizer=new SvmClassifier();
-		testFont(codePoint,test,train,recognizer);
+		//CharacterRecognizer recognizer=new RandomForestClassifier();
+		testFont(codePoint,test,train,recognizer,Arrays.asList(AspectRatio.NAME,Gradient.FULL_NAME,Grid.NAME,Moments.NAME,CrossNumber.NAME));
 	}
 	public static void testFontChinese(){
 		System.out.println("Exact:");
@@ -71,10 +75,10 @@ public class FontTest{
 		Font[] test=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getScaleInstance(2,2)});
 		Font[] train=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getTranslateInstance(0,0)});
 		CharacterRecognizer recognizer=new LinearClassifier();
-		testFont(codePoint,test,train,recognizer);
+		testFont(codePoint,test,train,recognizer,Arrays.asList(AspectRatio.NAME,Gradient.FULL_NAME,Grid.NAME,Moments.NAME,CrossNumber.NAME));
 	}
 	private static Font[] getFontCombination(Font[] base,float[] size,int[] style,AffineTransform[] transform){
-		Font[] fonts=new Font[base.length*size.length*style.length];
+		Font[] fonts=new Font[base.length*size.length*style.length*transform.length];
 		int i=0;
 		for(Font font:base){
 			for(float f:size){
@@ -87,8 +91,8 @@ public class FontTest{
 		}
 		return fonts;
 	}
-	private static void testFont(int[] codePoints,Font[] test,Font[] train,CharacterRecognizer recognizer){
-		testOnFont(test,codePoints,SingleCharacterTest.buildModel(train,codePoints,recognizer));
+	private static void testFont(int[] codePoints,Font[] test,Font[] train,CharacterRecognizer recognizer,List<String> features){
+		testOnFont(test,codePoints,SingleCharacterTest.buildModel(train,codePoints,recognizer,features));
 	}
 	public static void testOnFont(Font[] fonts,int[] codePoints,SingleCharacterTest test){
 		for(Font font:fonts){
@@ -120,7 +124,7 @@ public class FontTest{
 		return new ConnectedComponent(bi);
 	}
 	public static void main(String[] args){
-		//testFontChinese();
-		testFontAlphanum();
+		testFontChinese();
+		//testFontAlphanum();
 	}
 }

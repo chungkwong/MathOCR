@@ -15,8 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.text;
+import com.github.chungkwong.mathocr.character.*;
+import com.github.chungkwong.mathocr.common.*;
 import com.github.chungkwong.mathocr.text.structure.Line;
 import java.awt.image.*;
+import java.util.*;
 /**
  * Built-in text line recognizer
  *
@@ -25,7 +28,16 @@ import java.awt.image.*;
 public class BuiltinLineRecognizer implements LineRecognizer{
 	@Override
 	public Line recognize(TextLine block,BufferedImage input){
-		return LineAnalyzers.REGISTRY.get().analysis(
-				CharacterSegmenters.REGISTRY.get().segment(block));
+		return recognize(CharacterSegmenters.REGISTRY.get().segment(block));
+	}
+	public static Line recognize(List<List<NavigableSet<CharacterCandidate>>> candidates){
+		LineAnalyzer lineAnalyzer=LineAnalyzers.REGISTRY.get();
+		LineValidator lineValidator=LineValidators.REGISTRY.get();
+		return candidates.stream().
+				map((c)->lineAnalyzer.analysis(c)).
+				map((l)->new Pair<>(l,lineValidator.validate(l))).
+				max(Comparator.comparingDouble((p)->p.getValue())).
+				map((p)->p.getKey()).
+				orElseGet(()->new Line(Collections.emptyList()));
 	}
 }

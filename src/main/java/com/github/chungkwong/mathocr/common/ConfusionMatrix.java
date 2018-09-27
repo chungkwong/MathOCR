@@ -150,6 +150,9 @@ public class ConfusionMatrix{
 		});
 		return categories;
 	}
+	public Frequencies<Pair<Integer,Integer>> getRaw(){
+		return matrix;
+	}
 	@Override
 	public boolean equals(Object obj){
 		return obj instanceof ConfusionMatrix&&Objects.equals(matrix,((ConfusionMatrix)obj).matrix);

@@ -34,6 +34,7 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 		Object model=ModelManager.getModel(recognizer.getModelType());
 		List<ConnectedComponent> components=block.getComponents();
 		fixContaining(components);
+		//TODO fix split character
 		Collections.sort(components,ConnectedComponent.FROM_LEFT);
 		List<NavigableSet<CharacterCandidate>> symbols=new ArrayList<>(components.size());
 		for(Iterator<ConnectedComponent> iterator=components.iterator();iterator.hasNext();){
@@ -58,7 +59,6 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 				continue;
 			}
 			int left=ele.getLeft(), right=ele.getRight(), top=ele.getTop(), bottom=ele.getBottom(), area=(right-left+1)*(bottom-top+1);
-			partition.makeSet();
 			for(int j=i+1;j<len;j++){
 				ConnectedComponent ele2=components.get(j);
 				if(ele2==null){
@@ -72,14 +72,14 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 				if(left<=right2&&top<=bottom2&&top2<=bottom&&overlap>Math.min(area,area2)/5){
 					if(area>=area2){
 						if(possibleRoot[i]==0){
-							possibleRoot[i]=CharacterVerifier.isIntegralSign(ele)||CharacterVerifier.isSquareRoot(ele)?(byte)1:-(byte)1;
+							possibleRoot[i]=canContainsOther(ele)?(byte)1:-(byte)1;
 						}
 						if(possibleRoot[i]==1){
 							continue;
 						}
 					}else{
 						if(possibleRoot[j]==0){
-							possibleRoot[j]=CharacterVerifier.isIntegralSign(ele2)||CharacterVerifier.isSquareRoot(ele2)?(byte)1:-(byte)1;
+							possibleRoot[j]=canContainsOther(ele2)?(byte)1:-(byte)1;
 						}
 						if(possibleRoot[j]==1){
 							continue;
@@ -90,6 +90,11 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 			}
 		}
 		trim(components);
+	}
+	private boolean canContainsOther(ConnectedComponent component){
+		CharacterRecognizer recognizer=CharacterRecognizers.REGISTRY.get();
+		NavigableSet<CharacterCandidate> candidates=recognizer.recognize(component,ModelManager.getModel(recognizer.getModelType()),ModelManager.getCharacterList());
+		return !candidates.isEmpty()&&"√∫∬∭∮∯∰∱∲∳".indexOf(candidates.first().getCodePoint())!=-1;
 	}
 	private static void trim(List<ConnectedComponent> components){
 		ListIterator<ConnectedComponent> iter=components.listIterator();

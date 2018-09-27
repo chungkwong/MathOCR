@@ -15,16 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.character.feature;
+import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.common.ConnectedComponent;
-import com.github.chungkwong.mathocr.character.Feature;
 /**
  * Crossing number
  *
  * @author Chan Chung Kwong
  */
-public class CrossNumber implements Feature<String>{
+public class CrossNumber implements VectorFeature{
+	public static final String NAME="CROSSING";
 	@Override
-	public String extract(ConnectedComponent component){
-		return component.getHorizontalChar()+";"+component.getVerticalChar();
+	public double[] extract(ConnectedComponent component){
+		double[] verticalCrossing=getMeanAndVar(component.getVerticalCrossing());
+		double[] horizontalCrossing=getMeanAndVar(component.getHorizontalCrossing());
+		return new double[]{verticalCrossing[0],verticalCrossing[1],horizontalCrossing[0],horizontalCrossing[1]};
+	}
+	private static double[] getMeanAndVar(byte[] data){
+		int sum=0;
+		int sqSum=0;
+		for(byte b:data){
+			sum+=b;
+			sqSum+=b*b;
+		}
+		double mean=((double)sum)/data.length;
+		double var=((double)sqSum)/data.length-mean*mean;
+		return new double[]{mean/10,var/100};
+	}
+	@Override
+	public int getDimension(){
+		return 4;
 	}
 }

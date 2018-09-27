@@ -31,6 +31,7 @@ public class Symbol extends Span{
 	private final String family;
 	private final int fontsize;
 	private final int style;
+	private final double confidence;
 	/**
 	 * Create a symbol
 	 *
@@ -42,13 +43,15 @@ public class Symbol extends Span{
 		this.family=candidate.getFamily();
 		this.fontsize=candidate.getFontSize();
 		this.style=candidate.getStyle();
+		this.confidence=candidate.getScore();
 	}
-	public Symbol(int codePoint,String family,int fontsize,int style,BoundBox box,int baseline){
+	public Symbol(int codePoint,String family,int fontsize,int style,BoundBox box,int baseline,double confidence){
 		super(box,baseline);
 		this.codePoint=codePoint;
 		this.family=family;
 		this.fontsize=fontsize;
 		this.style=style;
+		this.confidence=confidence;
 	}
 	/**
 	 * @return Unicode code point
@@ -76,6 +79,12 @@ public class Symbol extends Span{
 	public int getStyle(){
 		return style;
 	}
+	/**
+	 * @return Confidence
+	 */
+	public double getConfidence(){
+		return confidence;
+	}
 	@Override
 	public String toString(){
 		return new String(new int[]{codePoint},0,1);
@@ -88,7 +97,7 @@ public class Symbol extends Span{
 	 * @return a line
 	 */
 	public static Symbol fromCodePoint(int codePoint,BoundBox box){
-		return new Symbol(codePoint,DEFAULT_FAMILY,DEFAULT_SIZE,DEFAULT_STYLE,box,box.getBottom());
+		return new Symbol(codePoint,DEFAULT_FAMILY,DEFAULT_SIZE,DEFAULT_STYLE,box,box.getBottom(),1.0);
 	}
 	@Override
 	public boolean isBaseLineReliable(){

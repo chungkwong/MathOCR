@@ -66,6 +66,14 @@ public class LinearClassifier implements CharacterRecognizer{
 				candidatesValue[k]=prob[i];
 			}
 		}
+		double sum=0.0;
+		for(int i=0;i<candidatesValue.length;i++){
+			candidatesValue[i]=Math.exp(candidatesValue[i]);
+			sum+=candidatesValue[i];
+		}
+		for(int i=0;i<candidatesValue.length;i++){
+			candidatesValue[i]/=sum;
+		}
 		//int candidate=(int)(Linear.predict(svmModel.getModel(),vector)+0.5);
 		TreeSet<CharacterCandidate> treeSet=new TreeSet<>();
 		for(int i=0;i<limit;i++){

@@ -15,16 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.text;
-import com.github.chungkwong.mathocr.Registry;
+import com.github.chungkwong.mathocr.*;
 /**
  *
  * @author Chan Chung Kwong
  */
-public class CharacterSegmenters{
-	public static final Registry<CharacterSegmenter> REGISTRY=new Registry<>("CHARACTER_SEGMENTER",new NaiveCharacterSegmenter());
+public class LineValidators{
+	public static final Registry<LineValidator> REGISTRY=new Registry<>("LINE_VALIDATOR",new NaiveLineValidator());
 	static{
-		REGISTRY.register(NaiveCharacterSegmenter.NAME,new NaiveCharacterSegmenter());
-		REGISTRY.register(SptialCharacterSegmenter.NAME,new SptialCharacterSegmenter());
-		REGISTRY.register(PredictiveCharacterSegmenter.NAME,new PredictiveCharacterSegmenter());
+		REGISTRY.register(NaiveLineValidator.NAME,new NaiveLineValidator());
 	}
 }

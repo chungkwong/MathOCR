@@ -30,5 +30,5 @@ public interface LineAnalyzer{
 	 * @param characters candidates of character segment
 	 * @return the line
 	 */
-	Line analysis(List<List<NavigableSet<CharacterCandidate>>> characters);
+	Line analysis(List<NavigableSet<CharacterCandidate>> characters);
 }

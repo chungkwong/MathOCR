@@ -15,19 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.character;
-import com.github.chungkwong.mathocr.character.feature.AspectRatio;
 import com.github.chungkwong.mathocr.character.feature.Gradient;
 import com.github.chungkwong.mathocr.Registry;
+import com.github.chungkwong.mathocr.character.feature.*;
 /**
  *
  * @author Chan Chung Kwong
  */
 public class Features{
-	public static final Registry<Feature> REGISTRY=new Registry<>("FEATURE",new Gradient(5,5));
+	public static final Registry<Feature> REGISTRY=new Registry<>("FEATURE",new Gradient(5,5,true));
 	static{
 		REGISTRY.register(AspectRatio.NAME,new AspectRatio());
-		//REGISTRY.register(Grid.NAME,new Grid(5,5));
-		REGISTRY.register(Gradient.NAME,new Gradient(5,5));
-		//REGISTRY.register(Moments.NAME,new Moments());
+		REGISTRY.register(Grid.NAME,new Grid(5,5));
+		REGISTRY.register(Gradient.NAME,new Gradient(5,5,true));
+		REGISTRY.register(Gradient.FULL_NAME,new Gradient(5,5,false));
+		REGISTRY.register(Moments.NAME,new Moments());
+		REGISTRY.register(CrossNumber.NAME,new CrossNumber());
 	}
 }

@@ -31,13 +31,16 @@ public class ColorDetector implements TextDetector{
 		int width=image.getWidth();
 		int height=image.getHeight();
 		int[] rgb=image.getRGB(0,0,width,height,null,0,width);
-		List<Stroke> colorCluster=clusterByColor(rgb,width,height);
+		ExtendedImage extendedImage=new ExtendedImage(rgb,width,height);
+		List<Stroke> colorCluster=clusterByColor(extendedImage);
 		filterConponent(colorCluster);
-		List<LineCandidate> lines=roughCharacterCluster(colorCluster);
-		filterLine(lines);
+		List<LineCandidate> lines=roughCharacterCluster(colorCluster,extendedImage);
 		return lines;
 	}
-	private List<Stroke> clusterByColor(int[] pixels,int width,int height){
+	private List<Stroke> clusterByColor(ExtendedImage image){
+		int width=image.width;
+		int height=image.height;
+		int[] pixels=image.pixels;
 		List<Stroke> components=new ArrayList<>();
 		int curr=0;
 		//Integer tmp;
@@ -75,13 +78,25 @@ public class ColorDetector implements TextDetector{
 						partition.union(id,last[k]);
 					}
 				}
+				BoundBox box=new BoundBox(j,k,i,i);
+				int w=k-j;
+				int r=image.getRed(j,k,i,i);
+				int g=image.getGreen(j,k,i,i);
+				int b=image.getBlue(j,k,i,i);
+				long s=image.getSquaredValue(j,k,i,i);
 				if(id==-1){
-					components.add(new Stroke(new ConnectedComponent(new RunLength(i,j,k-j-1)),pixels[ind-1]));
+					components.add(new Stroke(box,w,r,g,b,s));
 					partition.makeSet();
 					id=curr++;
 				}else{
 					id=partition.findRoot(id);
-					components.get(id).getComponent().addRunLengthToLast(new RunLength(i,j,k-j-1));
+					Stroke stroke=components.get(id);
+					stroke.box=BoundBox.union(box,stroke.box);
+					stroke.w+=w;
+					stroke.r+=r;
+					stroke.g+=g;
+					stroke.b+=b;
+					stroke.s+=s;
 				}
 				lastlt=last[k-1];
 				for(int l=j;l<k;l++){
@@ -95,50 +110,56 @@ public class ColorDetector implements TextDetector{
 		return components;
 	}
 	private static boolean isConnected(int i,int j){
-		int dr=Math.abs((i&0xFF0000)>>16-(j&0xFF0000)>>16);
-		int dg=Math.abs((i&0xFF00)>>8-(j&0xFF00)>>8);
-		int db=Math.abs(i&0xFF-j&0xFF);
+		int dr=Math.abs(((i&0xFF0000)>>16)-((j&0xFF0000)>>16));
+		int dg=Math.abs(((i&0xFF00)>>8)-((j&0xFF00)>>8));
+		int db=Math.abs((i&0xFF)-(j&0xFF));
+		//return 316*dr+624*dg+84*db<45*1024;
 		return dr+dg+db<45;
 	}
 	private void filterConponent(List<Stroke> colorCluster){
-		colorCluster.removeIf((c)->c==null||c.getComponent().getBox().getWidth()<=4||c.getComponent().getBox().getHeight()<=4||c.getComponent().getNumberOfHoles()>=10);
+		colorCluster.removeIf((c)->c==null||c.box.getWidth()<=4||c.box.getHeight()<=4);
 	}
-	private List<LineCandidate> roughCharacterCluster(List<Stroke> strokes){
-		List<LineCandidate> lines=strokes.stream().map((s)->new LineCandidate(s.getComponent())).collect(Collectors.toCollection(ArrayList::new));
+	private List<LineCandidate> roughCharacterCluster(List<Stroke> strokes,ExtendedImage image){
+		List<List<Stroke>> lines=strokes.stream().map((s)->{
+			ArrayList<Stroke> set=new ArrayList<>(1);
+			set.add(s);
+			return set;
+		}).collect(Collectors.toCollection(ArrayList::new));
 		Partition partition=new Partition((int m,int n)->{
-			lines.get(n).merge(lines.get(m));
+			lines.get(n).addAll(lines.get(m));
 			lines.set(m,null);
 		},strokes.size());
 		for(ListIterator<Stroke> iterator=strokes.listIterator();iterator.hasNext();){
 			Stroke from=iterator.next();
 			for(ListIterator<Stroke> iter=strokes.listIterator(iterator.previousIndex()+1);iter.hasNext();){
 				Stroke to=iter.next();
-				if(isLikelySameCharacter(from,to)){
+				if(isLikelySameCharacter(from,to,image)){
 					partition.union(iterator.previousIndex(),iter.previousIndex());
 				}
 			}
 		}
 		//System.out.println(lines.size());
-		lines.removeIf((c)->c==null||c.getComponents().size()<=1||c.getBox().getArea()<=256);
+		lines.removeIf((c)->c==null||c.size()<=1||!isLikelyLine(strokes,image));
 		//System.out.println(lines.size());
 		//System.out.println();
-		return lines;
+		return lines.stream().map((l)->new LineCandidate(l.stream().map((c)->new ConnectedComponent(c.box)).collect(Collectors.toList()))).collect(Collectors.toList());
 	}
-	private boolean isLikelySameCharacter(Stroke from,Stroke to){
-		int fromSize=Math.max(from.getComponent().getWidth(),from.getComponent().getHeight());
-		int toSize=Math.max(to.getComponent().getWidth(),to.getComponent().getHeight());
+	private boolean isLikelySameCharacter(Stroke from,Stroke to,ExtendedImage image){
+		if(!isConnected(from.getRGB(),to.getRGB())){
+			return false;
+		}
+		int fromSize=Math.max(from.box.getWidth(),from.box.getHeight());
+		int toSize=Math.max(to.box.getWidth(),to.box.getHeight());
 		if(fromSize>=5*toSize||toSize>=5*fromSize){
 			return false;
 		}
 		if(!isConnected(from.getRGB(),to.getRGB())){
 			return false;
 		}
-		int distance=calculateDistance(from.getComponent(),to.getComponent());
+		int distance=calculateDistance(from.box,to.box);
 		return distance<Math.min(fromSize,toSize)/2;
 	}
-	public static int calculateDistance(ConnectedComponent from,ConnectedComponent to){
-		BoundBox fromBox=from.getBox();
-		BoundBox toBox=to.getBox();
+	public static int calculateDistance(BoundBox fromBox,BoundBox toBox){
 		int dx=fromBox.getLeft()<=toBox.getRight()&&toBox.getLeft()<=fromBox.getRight()?0
 				:Math.max(fromBox.getLeft()-toBox.getRight(),toBox.getLeft()-fromBox.getRight());
 		//int dy=fromBox.getTop()<=toBox.getBottom()&&toBox.getTop()<=fromBox.getBottom()?0
@@ -146,18 +167,32 @@ public class ColorDetector implements TextDetector{
 		int dy=Math.abs(fromBox.getBottom()-toBox.getBottom());
 		return Math.max(dx,dy);
 	}
-	private void filterLine(List<LineCandidate> lines){
-		lines.removeIf((line)->line.getComponents().size()<=1||line.getBox().getArea()<=512);
+	private boolean isLikelyLine(List<Stroke> strokes,ExtendedImage image){
+		BoundBox box=BoundBox.union(strokes.stream().map((s)->s.box).toArray(BoundBox[]::new));
+		if(box.getArea()<=512){
+			return false;
+		}
+		int w=strokes.stream().mapToInt((s)->s.w).sum()*3;
+		long devIn=strokes.stream().mapToLong((s)->s.s).sum()/w-square(strokes.stream().mapToInt((s)->s.r+s.g+s.b).sum())/w*w;
+		int area=box.getArea()*3;
+		long devOut=image.getSquaredValue(box.getLeft(),box.getRight(),box.getTop(),box.getBottom())/area
+				-(image.getRed(box.getLeft(),box.getRight(),box.getTop(),box.getBottom())+image.getGreen(box.getLeft(),box.getRight(),box.getTop(),box.getBottom())+image.getBlue(box.getLeft(),box.getRight(),box.getTop(),box.getBottom()))/(area*area);
+		return devOut>3*devIn;
+	}
+	private static long square(long l){
+		return l*l;
 	}
 	private static class Stroke{
-		private final ConnectedComponent component;
+		private BoundBox box;
 		private int r, g, b, w;
-		public Stroke(ConnectedComponent component,int rgb){
-			this.component=component;
-			w=component.getWeight();
-			r=((rgb&0xFF0000)>>16)*w;
-			g=((rgb&0xFF00)>>8)*w;
-			b=(rgb&0xFF)*w;
+		private long s;
+		public Stroke(BoundBox box,int w,int r,int g,int b,long s){
+			this.box=box;
+			this.w=w;
+			this.r=r;
+			this.g=g;
+			this.b=b;
+			this.s=s;
 		}
 		public int getRGB(){
 			int red=r/w;
@@ -165,14 +200,73 @@ public class ColorDetector implements TextDetector{
 			int blue=b/w;
 			return (red<<16)|(green<<8)|blue;
 		}
-		public ConnectedComponent getComponent(){
-			return component;
-		}
 		public void combineWith(Stroke stroke){
-			component.combineWith(stroke.component);
+			box=BoundBox.union(box,stroke.box);
+			w+=stroke.w;
 			r+=stroke.r;
 			g+=stroke.g;
 			b+=stroke.b;
+			s+=stroke.s;
+		}
+	}
+	private static class ExtendedImage{
+		int[] pixels;
+		int width, height;
+		int[] rSum, gSum, bSum;
+		long[] sqSum;
+		public ExtendedImage(int[] pixels,int width,int height){
+			this.pixels=pixels;
+			this.width=width;
+			this.height=height;
+			rSum=getIntegralImage(16);
+			gSum=getIntegralImage(8);
+			bSum=getIntegralImage(0);
+			sqSum=getSquaredIntegralImage();
+		}
+		private int[] getIntegralImage(int shift){
+			int[] intImg=new int[(height+1)*(width+1)];
+			for(int i=0, ind=width+1, indo=0;i<height;i++){
+				++ind;
+				for(int j=0;j<width;j++,ind++,indo++){
+					intImg[ind]=intImg[ind-width-1]+intImg[ind-1]+((pixels[indo]>>shift)&0xFF)-intImg[ind-width-2];
+				}
+			}
+			return intImg;
+		}
+		private long[] getSquaredIntegralImage(){
+			long[] intImg=new long[(height+1)*(width+1)];
+			for(int i=0, ind=width+1, indo=0;i<height;i++){
+				++ind;
+				for(int j=0;j<width;j++,ind++,indo++){
+					intImg[ind]=intImg[ind-width-1]+intImg[ind-1]+getSquaredValue(pixels[indo])-intImg[ind-width-2];
+				}
+			}
+			return intImg;
+		}
+		public int getRed(int left,int right,int top,int bottom){
+			return getValue(left,right,top,bottom,rSum);
+		}
+		public int getGreen(int left,int right,int top,int bottom){
+			return getValue(left,right,top,bottom,gSum);
+		}
+		public int getBlue(int left,int right,int top,int bottom){
+			return getValue(left,right,top,bottom,bSum);
+		}
+		private int getValue(int left,int right,int top,int bottom,int[] integral){
+			++right;
+			++bottom;
+			return integral[bottom*width+right]-integral[bottom*width+left]-integral[top*width+right]+integral[top*width+left];
+		}
+		private long getSquaredValue(int left,int right,int top,int bottom){
+			++right;
+			++bottom;
+			return sqSum[bottom*width+right]-sqSum[bottom*width+left]-sqSum[top*width+right]+sqSum[top*width+left];
+		}
+		private static int getSquaredValue(int pixel){
+			int r=(pixel>>16)&0xFF;
+			int g=(pixel>>8)&0xFF;
+			int b=pixel&0xFF;
+			return r*r+g*g+b*b;
 		}
 	}
 }

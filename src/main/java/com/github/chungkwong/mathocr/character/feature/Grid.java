@@ -39,7 +39,7 @@ public class Grid implements VectorFeature{
 	}
 	@Override
 	public double[] extract(ConnectedComponent component){
-		int h=component.getHeight(), w=component.getWidth();
+		/*int h=component.getHeight(), w=component.getWidth();
 		double scale=Math.max(h*1.0/m,w*1.0/n);
 		double a=m*0.5-(component.getBottom()+component.getTop()+1)*0.5/scale;
 		double b=n*0.5-(component.getLeft()+component.getRight()+1)*0.5/scale;
@@ -74,6 +74,51 @@ public class Grid implements VectorFeature{
 			for(int j=0;j<n;j++,ind++){
 				if(vec[ind]!=0){
 					vec[ind]/=((ptv[i+1]-ptv[i])*(pth[j+1]-pth[j]));
+				}
+			}
+		}
+		return vec;*/
+		int h=component.getHeight(), w=component.getWidth();
+		double[] ptv=new double[m+1], pth=new double[n+1];
+		for(int i=0;i<=m;i++){
+			ptv[i]=h*i/m;
+		}
+		for(int j=0;j<=n;j++){
+			pth[j]=h*j/n;
+		}
+		double[] vec=new double[m*n];
+		Iterator<RunLength> iter=component.getRunLengths().iterator();
+		RunLength curr=iter.hasNext()?iter.next():null;
+		for(int i=0;i<m;i++){
+			while(curr!=null&&curr.getY()<ptv[i+1]){
+				double j1=curr.getX(), j2=j1+curr.getCount()+1;
+				for(int j=0, ind=n*i;j<n;j++,ind++){
+					if(j1<pth[j+1]){
+						if(j2<pth[j+1]){
+							vec[ind]+=(j2-j1);
+							break;
+						}else{
+							vec[ind]+=(pth[j+1]-j1);
+							j1=pth[j+1];
+						}
+					}
+				}
+				curr=iter.hasNext()?iter.next():null;
+			}
+		}
+		double sum=0.0;
+		for(int i=0, ind=0;i<m;i++){
+			for(int j=0;j<n;j++,ind++){
+				if(vec[ind]!=0){
+					vec[ind]/=((ptv[i+1]-ptv[i])*(pth[j+1]-pth[j]));
+					sum+=vec[ind];
+				}
+			}
+		}
+		for(int i=0, ind=0;i<m;i++){
+			for(int j=0;j<n;j++,ind++){
+				if(vec[ind]!=0){
+					vec[ind]/=sum;
 				}
 			}
 		}

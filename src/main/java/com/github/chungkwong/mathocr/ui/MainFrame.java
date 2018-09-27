@@ -41,6 +41,7 @@ public final class MainFrame implements ActionListener,WindowListener,Runnable{
 		JMenuBar jmb=new JMenuBar();
 		JMenu newmenu=new JMenu(ENVIRONMENT.getTranslation("FILE"));
 		addMenuItem("DOCUMENT_RECOGNITION",newmenu);
+		addMenuItem("FORMULA_RECOGNITION",newmenu);
 		newmenu.addSeparator();
 		addMenuItem("PREFERENCE",newmenu);
 		newmenu.addSeparator();
@@ -87,6 +88,10 @@ public final class MainFrame implements ActionListener,WindowListener,Runnable{
 				JPanel master=new JPanel(new BorderLayout());
 				master.add(new SourceInspector(master));
 				pane.addTab(ENVIRONMENT.getTranslation("DOCUMENT_RECOGNITION"),master);
+				pane.setSelectedIndex(pane.getComponentCount()-1);
+				break;
+			case "FORMULA_RECOGNITION":
+				pane.addTab(ENVIRONMENT.getTranslation("FORMULA_RECOGNITION"),new MathInspector());
 				pane.setSelectedIndex(pane.getComponentCount()-1);
 				break;
 			case "FONT_TRAINING":

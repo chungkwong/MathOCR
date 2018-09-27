@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.ui;
+import com.github.chungkwong.mathocr.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 /**
@@ -25,7 +25,6 @@ import javax.swing.event.*;
  * @author Chan Chung Kwong
  */
 public class StringViewer extends JPanel implements UndoableEditListener,ItemListener,ChangeListener{
-	private static final ResourceBundle BUNDLE=ResourceBundle.getBundle("com.github.chungkwong.mathocr.resources.gui");
 	private final JTextField in=new JTextField();
 	private final JSpinner size=new JSpinner(new SpinnerNumberModel(24,1,1024,1.0));
 	private final JToggleButton italic=new JToggleButton("I");
@@ -48,7 +47,7 @@ public class StringViewer extends JPanel implements UndoableEditListener,ItemLis
 		input.add(params,BorderLayout.EAST);
 		add(input,BorderLayout.NORTH);
 		add(new JScrollPane(out),BorderLayout.CENTER);
-		in.setText(BUNDLE.getString("TEST_STRING"));
+		in.setText(Environment.ENVIRONMENT.getTranslation("TEST_STRING"));
 	}
 	public static void main(String[] args){
 		JFrame f=new JFrame();

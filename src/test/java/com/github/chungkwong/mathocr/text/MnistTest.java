@@ -17,10 +17,12 @@
 package com.github.chungkwong.mathocr.text;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.character.classifier.*;
+import com.github.chungkwong.mathocr.character.feature.*;
 import com.github.chungkwong.mathocr.common.*;
 import com.github.chungkwong.mathocr.preprocess.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.*;
 import java.util.logging.*;
 import javax.imageio.*;
 /**
@@ -33,7 +35,7 @@ public class MnistTest{
 		File root=new File(DATASETS,"mnist_png");
 		File train=new File(root,"training");
 		CombinedPreprocessor preprocessor=CombinedPreprocessor.getDefaultCombinedPreprocessor();
-		DataSet dataSet=new DataSet();
+		DataSet dataSet=new DataSet(Arrays.asList(AspectRatio.NAME,Gradient.FULL_NAME,CrossNumber.NAME));
 		System.out.println("training");
 		int counter=0;
 		for(int i=0;i<10;i++){
@@ -52,7 +54,8 @@ public class MnistTest{
 				}
 			}
 		}
-		CharacterRecognizer recognizer=new SvmClassifier();
+		//CharacterRecognizer recognizer=new DistanceClassifier(DistanceClassifier.EUCLID_DISTANCE);
+		CharacterRecognizer recognizer=new LinearClassifier(1);
 		SingleCharacterTest tester=SingleCharacterTest.buildModel(dataSet,recognizer);
 		Object model=tester.getModel();
 		CharacterList list=tester.getList();
@@ -61,6 +64,10 @@ public class MnistTest{
 			int codePoint='0'+i;
 			for(File sample:new File(test,Integer.toString(i)).listFiles()){
 				try{
+					++counter;
+					if(counter%1000==0){
+						System.out.println(counter);
+					}
 					BufferedImage image=preprocessor.apply(ImageIO.read(sample),true);
 					tester.addSample(image,codePoint);
 				}catch(IOException ex){

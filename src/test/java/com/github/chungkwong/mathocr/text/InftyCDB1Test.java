@@ -30,10 +30,10 @@ import javax.imageio.*;
  */
 public class InftyCDB1Test{
 	private static final File DATASETS=new File("../datasets");
-	public static void main(String[] args) throws IOException{
-		//SingleCharacterTest tester=buildModel(SingleCharacterTests.class.getResourceAsStream("/com/github/chungkwong/mathocr/resources/math_train_set.xml"),new LinearClassifier());
-		//SingleCharacterTest tester=SingleCharacterTest.loadModel(new LinearClassifier(1),new File(System.getProperty("user.home"),".mathocr/infty"));
-		SingleCharacterTest tester=SingleCharacterTest.loadModel(new SvmClassifier(),new File(System.getProperty("user.home"),".mathocr/infty"));
+	public static void main(String[] args) throws IOException,Exception{
+		SingleCharacterTest tester=SingleCharacterTest.buildModel(SingleCharacterTest.class.getResourceAsStream("/com/github/chungkwong/mathocr/character/infty_train_set.xml"),new LinearClassifier(1));
+		//SingleCharacterTest tester=SingleCharacterTest.loadModel(new LinearClassifier(1),new File(System.getProperty("user.home"),".mathocr/default"));
+		//SingleCharacterTest tester=SingleCharacterTest.loadModel(new SvmClassifier(),new File(System.getProperty("user.home"),".mathocr/infty"));
 		Map<String,Integer> name2code=new HashMap<>();
 		new BufferedReader(new InputStreamReader(SingleCharacterTest.class.getResourceAsStream("inftyCDB1.map"),StandardCharsets.UTF_8)).
 				lines().forEach((line)->{
@@ -74,5 +74,7 @@ public class InftyCDB1Test{
 			}
 		}
 		tester.printResult();
+		//ErrataList errata=ErrataList.generate(tester.getConfusionMatrix(),5,0.1);
+		//errata.write(new File("/home/kwong/.mathocr/default/erratas.json"));
 	}
 }

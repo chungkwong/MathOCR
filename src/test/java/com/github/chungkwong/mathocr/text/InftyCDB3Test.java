@@ -17,6 +17,7 @@
 package com.github.chungkwong.mathocr.text;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.character.classifier.*;
+import com.github.chungkwong.mathocr.character.feature.*;
 import com.github.chungkwong.mathocr.common.*;
 import com.github.chungkwong.mathocr.preprocess.*;
 import java.awt.image.*;
@@ -34,7 +35,7 @@ public class InftyCDB3Test{
 	private static final File DATASETS=new File("../datasets");
 	public static void main(String[] args) throws IOException{
 		CombinedPreprocessor preprocessor=CombinedPreprocessor.getDefaultCombinedPreprocessor();
-		DataSet dataSet=new DataSet();
+		DataSet dataSet=new DataSet(Arrays.asList(AspectRatio.NAME,Gradient.NAME,Grid.NAME,Moments.NAME,CrossNumber.NAME));
 		System.out.println("training");
 		int[] counter=new int[]{0,-1};
 		BufferedImage[] sheet=new BufferedImage[]{null};
@@ -61,6 +62,7 @@ public class InftyCDB3Test{
 		System.out.println("building");
 		int[] result=new int[]{0,0};
 		CharacterRecognizer recognizer=new LinearClassifier(1);
+		//CharacterRecognizer recognizer=new SvmClassifier();
 		Object model=ModelTypes.REGISTRY.get(recognizer.getModelType()).build(dataSet);
 		CharacterList list=dataSet.getCharacterList();
 		SingleCharacterTest tester=new SingleCharacterTest(model,list,recognizer);
