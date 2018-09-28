@@ -322,14 +322,4 @@ public class TrainSet{
 			writer.writeEndElement();
 		}
 	}
-	public static void main(String[] args) throws Exception{
-		//File dir=new File(new File(System.getProperty("user.home")),".mathocr/infty");
-		//TrainSet set=TrainSet.load(TrainSet.class.getResourceAsStream("infty_train_set.xml"));
-		//File dir=new File(new File(System.getProperty("user.home")),".mathocr/default");
-		//TrainSet set=TrainSet.load(TrainSet.class.getResourceAsStream("math_train_set.xml"));
-		File dir=new File(new File(System.getProperty("user.home")),".mathocr/chinese");
-		TrainSet set=TrainSet.load(TrainSet.class.getResourceAsStream("chinese_train_set.xml"));
-		dir.mkdirs();
-		set.train(dir);
-	}
 }

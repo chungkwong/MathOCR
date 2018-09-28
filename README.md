@@ -7,7 +7,31 @@ MathOCR has the functionality of image preprocessing, layout analysis and charac
 especially the ability to recognize mathematical expression.
 MathOCR can work do not depends on other OCR software.
 
-MathOCR is released under the terms of GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+MathOCR is released under the terms of GNU Affero General Public License
+as published by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+
+## Usage
+
+### Prebuilt JAR
+
+A prebuilt JAR is available at https://oss.sonatype.org/content/repositories/snapshots/com/github/chungkwong/mathocr/1.0-SNAPSHOT
+
+### Build from source
+
+1. Clone the project: `https://github.com/chungkwong/MathOCR.git`
+2. Get into the directory: `cd MathOCR`
+3. Edit the file `src/test/resources/com/github/chungkwong/mathocr/text/math_train_set.xml`
+    - Ensure that path to the fonts are correct
+    - Ensure all the characters needed to be recognized are listed
+4. Train the model: `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.text.ModelBuilder" -Dexec.classpathScope="test"`
+5. Link or copy the model to the project: `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+6. Build the JAR: `mvn package`
+
+### Run
+
+Run the JAR file by double click or something like `java -jar mathocr-1.0-SNAPSHOT.jar`,
+then a GUI interface should appear.
 
 ## Technique summary
 
@@ -109,6 +133,40 @@ MathOCR具备基本的图形预处理、版面分析和字符识别能力，特�
 MathOCR不依赖于其它OCR软件。
 
 MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下发布。
+
+## 用法
+
+### 二进制包
+
+有一个已经构建好的JAR可以下载： https://oss.sonatype.org/content/repositories/snapshots/com/github/chungkwong/mathocr/1.0-SNAPSHOT
+
+### 从源构建
+
+1. 克隆项目： `https://github.com/chungkwong/MathOCR.git`
+2. 进入项目目录： `cd MathOCR`
+3. 编辑文件 `src/test/resources/com/github/chungkwong/mathocr/text/math_train_set.xml`
+    - 确保训练用字体路径正确
+    - 确保需要识别的字符都已列出
+4. 训练模型： `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.text.ModelBuilder" -Dexec.classpathScope="test"`
+5. 把模型连接或复制到项目: `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+6. 构建JAR: `mvn package`
+
+### 运行
+
+通过双击或命令如`java -jar mathocr-1.0-SNAPSHOT.jar`运行GUI用户界面。
+
+### 准确程度
+
+日前来说准确程度并不能有太高期望。
+
+- 对于低分辨率图片（包括通常字体大小的屏幕截图）结果可能纯属垃圾。
+- 对于噪声比较大的图片结果可能纯属垃圾，轻微光照不均的浅色的背景倒可以接受。
+- 目前默认字符切分用连通域分割，基本上不能处理分体字符（如i）或粘连字符，
+目前适用于中文的算法虽然能处理这些情况但不适用于数学公式。
+- 在InftyCDB1数据集上，不用上下文和统计信息，单字符识别准确率可达92%，
+把`S`和`s`等形状雷同字符视为相同的话可达96%。
+对于宽度或高度特别小的字符如圆点或竖线特别容易出错。
+- 在InftyCDB1数据集上，上下标判定的准确率可达98.57%。
 
 ## 工作原理
 

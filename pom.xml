@@ -42,6 +42,11 @@
 			<artifactId>deeplearning4j-zoo</artifactId>
 			<version>${dl4j.version}</version>
 		</dependency>-->
+		<!--		<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-stable</artifactId>
+			<version>3.8.2</version>
+		</dependency>-->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -94,6 +99,19 @@
 	</repositories>
 	<build>
 		<plugins>
+
+			<plugin>
+				<!-- Build an executable JAR -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>com.github.chungkwong.mathocr.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -109,4 +127,48 @@
 			</plugin>
 		</plugins>
 	</build>
+	<name>mathocr</name>
+	<description>A printed scientific document recognition system</description>
+	<url>https://github.com/chungkwong/mathocr</url>
+	<inceptionYear>2014</inceptionYear>
+	<licenses>
+		<license>
+			<name>GNU General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>chungkwong</id>
+			<name>陈颂光</name>
+			<email>1m02math@126.com</email>
+			<url>https://chungkwong.cc</url>
+			<timezone>+8</timezone>
+			<organization>SYSU</organization>
+			<organizationUrl>http://www.sysu.edu.cn</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/chungkwong/mathocr</url>
+		<tag>HEAD</tag>
+		<connection>scm:git:https://github.com/chungkwong/MathOCR.git</connection>
+	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/chungkwong/mathocr/issues</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repo</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Staging Repo</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
 </project>

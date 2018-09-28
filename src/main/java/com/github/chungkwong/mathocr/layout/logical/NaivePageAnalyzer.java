@@ -42,10 +42,9 @@ public class NaivePageAnalyzer implements PageAnalyzer{
 				String beginning=textLike.getBeginning();
 				String ending=textLike.getEnding();
 				int lstType=Listing.testItem(beginning);
-				boolean equation=beginning.startsWith("$$");
 				boolean centered=false;
 				TextBlock lb;
-				if(equation){
+				if(centered&&textLike.getLines().size()==1){
 					lb=new Paragraph(textLike);
 					lb.setNoEnd(true);
 					lb.setNoStart(true);

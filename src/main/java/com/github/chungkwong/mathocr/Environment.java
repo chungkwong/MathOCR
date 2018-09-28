@@ -176,7 +176,7 @@ public final class Environment{
 		env.boolMap.put("CLEAN_EDGES",pref.getBoolean("CLEAN_EDGES",false));
 		env.intMap.put("KFILL_WINDOW",pref.getInt("KFILL_WINDOW",3));
 		env.intMap.put("MANUAL_THREHOLD_LIMIT",pref.getInt("MANUAL_THREHOLD_LIMIT",192));
-		env.intMap.put("SAUVOLA_WINDOW",pref.getInt("SAUVOLA_WINDOW",15));
+		env.intMap.put("SAUVOLA_WINDOW",pref.getInt("SAUVOLA_WINDOW",128));
 		env.floatMap.put("SAUVOLA_WEIGHT",pref.getFloat("SAUVOLA_WEIGHT",0.1f));
 		env.strMap.put("THREHOLD_METHOD",pref.get("THREHOLD_METHOD","Sauvola"));
 		env.strMap.put("SKEW_DETECT_METHOD",pref.get("SKEW_DETECT_METHOD","PP"));
@@ -191,7 +191,7 @@ public final class Environment{
 		env.strMap.put("BLOCK_CLASSIFIER",pref.get("BLOCK_CLASSIFIER","NAIVE"));
 		env.strMap.put("PAGE_SEGMENTER",pref.get("PAGE_SEGMENTER","XY_CUT"));
 		env.strMap.put("BLOCK_ORDERER",pref.get("BLOCK_ORDERER","NAIVE"));
-		env.strMap.put("CHARACTER_SEGMENTER",pref.get("CHARACTER_SEGMENTER","NAIVE"));
+		env.strMap.put("CHARACTER_SEGMENTER",pref.get("CHARACTER_SEGMENTER","SPTIAL"));
 		env.strMap.put("LINE_ANALYZER",pref.get("LINE_ANALYZER","NAIVE"));
 		env.strMap.put("LINE_SEGMENT_METHOD",pref.get("LINE_SEGMENT_METHOD","PROJECTION"));
 		try{

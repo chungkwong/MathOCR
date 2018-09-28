@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<feature>GRADIENT</feature>
 		<feature>GRID</feature>
 		<feature>MOMENTS</feature>
+		<feature>CROSSING</feature>
 	</features>
 	<data>
 		<set>
@@ -52,6 +53,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</fonts>
 			<styles>
 				<style>PLAIN</style>
+				<!--<style>BOLD</style>-->
+				<!--<style>ITALIC</style>-->
+				<!--<style>BOLD_ITALIC</style>-->
 			</styles>
 			<sizes>
 				<size>10</size>

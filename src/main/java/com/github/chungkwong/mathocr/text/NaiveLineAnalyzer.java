@@ -23,7 +23,7 @@ import com.github.chungkwong.mathocr.text.structure.Line;
 import com.github.chungkwong.mathocr.text.structure.Span;
 import com.github.chungkwong.mathocr.text.structure.Subscript;
 import com.github.chungkwong.mathocr.common.BoundBox;
-import com.github.chungkwong.mathocr.text.structure.Symbol;
+import com.github.chungkwong.mathocr.text.structure.*;
 import java.util.*;
 import java.util.stream.*;
 /**
@@ -45,7 +45,7 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 	private Span layoutV(List<List<Span>> columns,int baseline,int fontsize){
 		List<List<Span>> spans=new ArrayList<>(columns.size());
 		for(List<Span> column:columns){
-			spans.add(new ArrayList<>(column));
+			spans.add(fixRoot(column,fontsize));
 		}
 		ListIterator<List<Span>> colIterator=spans.listIterator();
 		int lastRight=colIterator.next().stream().mapToInt((s)->s.getBox().getRight()).max().getAsInt();
@@ -138,6 +138,36 @@ public class NaiveLineAnalyzer implements LineAnalyzer{
 			}
 		}
 		return new Matrix(array);
+	}
+	private List<Span> fixRoot(List<Span> column,int fontSize){
+		out:
+		for(Span span:column){
+			if(span instanceof Symbol&&((Symbol)span).getCodePoint()=='√'){
+				List<Span> left=new ArrayList<>();
+				List<Span> right=new ArrayList<>();
+				for(Span child:column){
+					if(child==span){
+						continue;
+					}
+					if(!BoundBox.isIntersect(span.getBox(),child.getBox())){
+						break out;
+					}
+					if(child.getBox().getLeft()<span.getBox().getLeft()+fontSize/4){
+						left.add(child);
+					}else{
+						right.add(child);
+					}
+				}
+				ArrayList<Span> result=new ArrayList<>(1);
+				if(left.isEmpty()){
+					result.add(new Radical(null,span,layoutH(right,span.getBox().getBottom(),fontSize)));
+				}else{
+					result.add(new Radical(layoutH(left,span.getBox().getBottom(),fontSize),span,layoutH(right,span.getBox().getBottom(),fontSize)));
+				}
+				return result;
+			}
+		}
+		return new ArrayList<>(column);
 	}
 	private boolean isHorizontalLine(Symbol symbol){
 		return "-¯_‐–—⌢⌣".indexOf(symbol.getCodePoint())!=-1;

@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.text.structure;
-import com.github.chungkwong.mathocr.common.BoundBox;
 /**
  * Radical expression
  *
@@ -29,8 +28,8 @@ public class Radical extends Span{
 	 * @param power
 	 * @param radicand
 	 */
-	public Radical(Span power,Span radicand){
-		super(BoundBox.union(power.getBox(),radicand.getBox()),radicand.getBaseLine());
+	public Radical(Span power,Span root,Span radicand){
+		super(root.getBox(),radicand.getBaseLine());
 		this.power=power;
 		this.radicand=radicand;
 	}

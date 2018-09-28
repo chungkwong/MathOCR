@@ -19,6 +19,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 import static com.github.chungkwong.mathocr.Environment.ENVIRONMENT;
+import java.nio.file.*;
 /**
  *
  * @author Chan Chung Kwong
@@ -54,6 +55,17 @@ public class ModelManager{
 	private static void loadDefault(){
 		String currPath=ENVIRONMENT.getString("DATA_DIRECTORY");
 		if(!currPath.equals(path)||list==null){
+			File directory=new File(currPath);
+			if(!directory.exists()){
+				try{
+					directory.mkdirs();
+					Files.copy(ModelManager.class.getResourceAsStream("default/index"),new File(directory,"index").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR"),new File(directory,"LINEAR").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR_f"),new File(directory,"LINEAR_f").toPath());
+				}catch(IOException ex){
+					Logger.getLogger(ModelManager.class.getName()).log(Level.SEVERE,"Failed to load model,please set data directory",ex);
+				}
+			}
 			list=getCharacterList(new File(currPath));
 			erratas=getErrataList(new File(currPath));
 			path=currPath;
