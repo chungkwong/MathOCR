@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.text.structure;
+import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.common.BoundBox;
-import com.github.chungkwong.mathocr.character.CharacterCandidate;
 import com.github.chungkwong.mathocr.text.structure.Symbol;
 /**
  * Symbol
@@ -101,6 +101,6 @@ public class Symbol extends Span{
 	}
 	@Override
 	public boolean isBaseLineReliable(){
-		return true;
+		return ModelManager.getSmallCharacterList().getCharacter(codePoint)==null;
 	}
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.common.*;
 import java.io.*;
 import java.nio.charset.*;
@@ -34,16 +34,17 @@ public class LanguageModelTest{
 			if(record==null){
 				continue;
 			}
-			if(!record.region){
-				frequencies.advanceFrequency(record.codepoint);
-				if(record.parent<0){
-					firstFrequencies.advanceFrequency(record.codepoint);
-				}
+			//if(!record.region){
+			frequencies.advanceFrequency(record.codepoint);
+			if(record.parent<0){
+				firstFrequencies.advanceFrequency(record.codepoint);
 			}
+			//}
 		}
-		frequencies.toMap().forEach((k,v)->{
-			System.out.println(new String(new int[]{k},0,1)+":"+firstFrequencies.getFrequency(k)*1.0/v.getCount());
-		});
+		frequencies.toMap().entrySet().stream().sorted(Comparator.comparing((e)->e.getValue().getCount()))
+				.forEach((e)->{
+					System.out.println(new String(new int[]{e.getKey()},0,1)+":"+e.getValue().getCount());
+				});
 	}
 	private static ArrayList<Record> loadRecords() throws IOException{
 		Map<String,Integer> name2code=new HashMap<>();

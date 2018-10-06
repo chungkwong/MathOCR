@@ -199,6 +199,12 @@ public class LatexEncoder implements DocumentEncoder{
 					buf.append('}');
 					return;
 				}
+			}else if(under.getContent() instanceof Symbol&&isBigOperator(((Symbol)under.getContent()).getCodePoint())){
+				encode(under.getContent(),math,buf);
+				buf.append("_{");
+				encode(under.getUnder(),math,buf);
+				buf.append('}');
+				return;
 			}
 			buf.append("\\stackrel{");
 			encode(under.getContent(),math,buf);
@@ -208,9 +214,10 @@ public class LatexEncoder implements DocumentEncoder{
 		}else if(span instanceof UnderOver){
 			UnderOver underover=((UnderOver)span);
 			if(underover.getContent() instanceof Symbol){
-				int codePoint=((Symbol)underover.getUnder()).getCodePoint();
+				int codePoint=((Symbol)underover.getContent()).getCodePoint();
 				if(isBigOperator(codePoint)){
-					buf.appendCodePoint(codePoint).append("^{");
+					encode(underover.getContent(),math,buf);
+					buf.append("^{");
 					encode(underover.getOver(),math,buf);
 					buf.append("}_{");
 					encode(underover.getUnder(),math,buf);
@@ -264,11 +271,14 @@ public class LatexEncoder implements DocumentEncoder{
 				int j=columnCount;
 				for(Span cell:row){
 					encode(cell,true,buf);
-					if(--columnCount>0){
+					if(--j>0){
 						buf.append(" & ");
 					}
 				}
 				buf.append("\\\\\n");
+			}
+			if(!((Matrix)span).getMatrix().isEmpty()){
+				buf.delete(buf.length()-3,buf.length()-1);
 			}
 			buf.append("\\end{array}\n");
 		}else{
@@ -346,7 +356,7 @@ public class LatexEncoder implements DocumentEncoder{
 		}
 	}
 	private static boolean isBigOperator(int codePoint){
-		return "∏∐∑∧∨∩∪∫∬∭∮∯∰∱∲∳⊓⊔⊕⊖⊗⊘⊙⊚⊛⊜⊝".indexOf(codePoint)!=-1;
+		return "∏∐∑∫∬∭∮∯∰∱∲∳⋀⋁⋂⋃⨀⨁⨂⨃⨄⨅⨆⨉".indexOf(codePoint)!=-1;
 	}
 	static{
 		Properties text=new Properties();

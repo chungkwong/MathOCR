@@ -16,6 +16,7 @@
  *
  */
 package com.github.chungkwong.mathocr.common;
+import com.github.chungkwong.mathocr.*;
 import java.util.*;
 /**
  * A data structure that store connected components
@@ -106,6 +107,7 @@ public final class ComponentPool{
 			}
 		}
 		trim(components);
+		filterNoise();
 	}
 	/**
 	 * Delete null element from a list
@@ -169,6 +171,12 @@ public final class ComponentPool{
 			sum+=ele.getWidth();
 		}
 		return sum/components.size();
+	}
+	public void filterNoise(){
+		int threhold=Environment.ENVIRONMENT.getInteger("NOISE_THREHOLD");
+		if(threhold>0){
+			components.removeIf((c)->c.getWidth()<=threhold&&c.getHeight()<=threhold);
+		}
 	}
 	/**
 	 * Filter out small components

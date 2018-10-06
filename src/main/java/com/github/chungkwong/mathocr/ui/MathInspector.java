@@ -15,10 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.mathocr.ui;
-import com.github.chungkwong.mathocr.common.*;
-import com.github.chungkwong.mathocr.layout.logical.*;
-import com.github.chungkwong.mathocr.preprocess.*;
-import com.github.chungkwong.mathocr.text.*;
+import com.github.chungkwong.mathocr.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.logging.*;
@@ -42,12 +39,9 @@ public class MathInspector extends JSplitPane{
 	}
 	private void inspect(File file){
 		try{
-			BufferedImage input=CombinedPreprocessor.getDefaultCombinedPreprocessor().apply(ImageIO.read(file),true);
-			BufferedImage preprocessed=CombinedPreprocessor.getDefaultCombinedPreprocessor().apply(ImageIO.read(file),true);
-			ComponentPool components=new ComponentPool(preprocessed);
-			TextLine line=new TextLine(components.getComponents(),components.getBoundBox(),TextLine.ALIGN_FULL);
+			BufferedImage input=ImageIO.read(file);
 			preview.setIcon(new ImageIcon(input));
-			output.setText(LatexEncoder.encode(new BuiltinLineRecognizer().recognize(line,input)));
+			output.setText(PipeLine.recognizeLatexFormula(input));
 		}catch(IOException ex){
 			Logger.getLogger(MathInspector.class.getName()).log(Level.SEVERE,null,ex);
 		}

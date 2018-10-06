@@ -1,5 +1,10 @@
 MathOCR Manual
 
+Formula recognition
+
+(1) Choose "Formula Recognition" in the menu "File"
+(2) Select a formula image in the dialog
+
 
 Document recognition
 
@@ -81,3 +86,6 @@ Use the method of the object com.github.chungkwong.mathocr.Environment.ENVIRONME
 (3) Put the image of the pages into a List(Accept File, URL, InputStream or BufferedImage)
 (4) Recognition(Assume the List above is denoted by `pages`)
 new PipeLine(pages.iterator()).getResult();
+
+There is a convenient static method PipeLine.recognizeLatexFormula(BufferedImage image)
+that can recognize formula.

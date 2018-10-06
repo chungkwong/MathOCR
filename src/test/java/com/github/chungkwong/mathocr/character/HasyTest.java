@@ -1,4 +1,4 @@
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.character.classifier.*;
 import com.github.chungkwong.mathocr.common.*;

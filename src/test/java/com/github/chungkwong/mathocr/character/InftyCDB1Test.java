@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.classifier.*;
 import com.github.chungkwong.mathocr.common.*;
 import com.github.chungkwong.mathocr.preprocess.*;
@@ -32,8 +32,8 @@ public class InftyCDB1Test{
 	private static final File DATASETS=new File("../datasets");
 	public static void main(String[] args) throws IOException,Exception{
 		//SingleCharacterTest tester=SingleCharacterTest.buildModel(SingleCharacterTest.class.getResourceAsStream("/com/github/chungkwong/mathocr/character/infty_train_set.xml"),new LinearClassifier(1));
-		//SingleCharacterTest tester=SingleCharacterTest.loadModel(new LinearClassifier(1),new File(System.getProperty("user.home"),".mathocr/default"));
-		SingleCharacterTest tester=SingleCharacterTest.loadModel(new SvmClassifier(),new File(System.getProperty("user.home"),".mathocr/infty"));
+		SingleCharacterTest tester=SingleCharacterTest.loadModel(new LinearClassifier(1),new File(System.getProperty("user.home"),".mathocr/default"),false);
+		//SingleCharacterTest tester=SingleCharacterTest.loadModel(new SvmClassifier(),new File(System.getProperty("user.home"),".mathocr/infty"));
 		Map<String,Integer> name2code=new HashMap<>();
 		new BufferedReader(new InputStreamReader(SingleCharacterTest.class.getResourceAsStream("inftyCDB1.map"),StandardCharsets.UTF_8)).
 				lines().forEach((line)->{

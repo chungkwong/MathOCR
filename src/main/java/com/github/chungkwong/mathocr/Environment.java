@@ -175,6 +175,7 @@ public final class Environment{
 		env.boolMap.put("DETECT_INVERT",pref.getBoolean("DETECT_INVERT",false));
 		env.boolMap.put("CLEAN_EDGES",pref.getBoolean("CLEAN_EDGES",false));
 		env.intMap.put("KFILL_WINDOW",pref.getInt("KFILL_WINDOW",3));
+		env.intMap.put("NOISE_THREHOLD",pref.getInt("NOISE_THREHOLD",2));
 		env.intMap.put("MANUAL_THREHOLD_LIMIT",pref.getInt("MANUAL_THREHOLD_LIMIT",192));
 		env.intMap.put("SAUVOLA_WINDOW",pref.getInt("SAUVOLA_WINDOW",128));
 		env.floatMap.put("SAUVOLA_WEIGHT",pref.getFloat("SAUVOLA_WEIGHT",0.1f));

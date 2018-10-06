@@ -67,21 +67,22 @@ public class DataSet{
 	}
 	public void addSample(Font font){
 		for(int i=0;i<0x10FFFF;i++){
-			if(font.canDisplay(i)){
-				addSample(font,i);
-			}
+			addSample(font,i);
 		}
 	}
 	public void addSample(Font font,int[] codePoints){
-		Arrays.stream(codePoints).filter((c)->font.canDisplay(c)).forEach((c)->addSample(font,c));
+		Arrays.stream(codePoints).forEach((c)->addSample(font,c));
 	}
 	public void addSample(Font font,int[] codePoints,int diff){
-		Arrays.stream(codePoints).filter((c)->font.canDisplay(c)).forEach((c)->addSample(font,c,c+diff));
+		Arrays.stream(codePoints).forEach((c)->addSample(font,c,c+diff));
 	}
 	public void addSample(Font font,int codePoint){
 		addSample(font,codePoint,codePoint);
 	}
 	public void addSample(Font font,int codePoint,int toCodePoint){
+		if(!font.canDisplay(codePoint)){
+			return;
+		}
 		FontRenderContext context=new FontRenderContext(null,false,true);
 		GlyphVector glyphVector=font.createGlyphVector(context,new String(new int[]{codePoint},0,1));
 		float x=(float)glyphVector.getVisualBounds().getX();
@@ -123,6 +124,7 @@ public class DataSet{
 	}
 	public void train(Collection<String> modelNames,File directory){
 		try{
+			directory.mkdirs();
 			characters.write(new File(directory,"index"));
 		}catch(IOException ex){
 			Logger.getLogger(DataSet.class.getName()).log(Level.SEVERE,null,ex);

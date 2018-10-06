@@ -33,6 +33,8 @@ import com.github.chungkwong.mathocr.layout.logical.LogicalBlock;
 import com.github.chungkwong.mathocr.layout.logical.Page;
 import com.github.chungkwong.mathocr.layout.logical.PageAnalyzers;
 import com.github.chungkwong.mathocr.common.ComponentPool;
+import com.github.chungkwong.mathocr.layout.logical.*;
+import com.github.chungkwong.mathocr.text.*;
 import java.awt.image.*;
 import java.io.*;
 import java.net.*;
@@ -228,5 +230,11 @@ public class PipeLine{
 		}catch(Exception ex){
 			throw new RuntimeException(ex);
 		}
+	}
+	public static String recognizeLatexFormula(BufferedImage image){
+		BufferedImage preprocessed=CombinedPreprocessor.getDefaultCombinedPreprocessor().apply(image,false);
+		ComponentPool components=new ComponentPool(preprocessed);
+		TextLine line=new TextLine(components.getComponents(),components.getBoundBox(),TextLine.ALIGN_FULL);
+		return LatexEncoder.encode(new BuiltinLineRecognizer().recognize(line,image));
 	}
 }

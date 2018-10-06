@@ -24,7 +24,7 @@ import com.github.chungkwong.mathocr.Registry;
  * @author Chan Chung Kwong
  */
 public class CharacterRecognizers{
-	public static final Registry<CharacterRecognizer> REGISTRY=new Registry<>("CHARACTER_RECOGNIZER",new SvmClassifier());
+	public static final Registry<CharacterRecognizer> REGISTRY=new Registry<>("CHARACTER_RECOGNIZER",new LinearClassifier());
 	static{
 		REGISTRY.register(LinearClassifier.NAME,new LinearClassifier());
 		REGISTRY.register(SvmClassifier.NAME,new SvmClassifier());

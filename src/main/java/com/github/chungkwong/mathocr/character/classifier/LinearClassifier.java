@@ -67,8 +67,9 @@ public class LinearClassifier implements CharacterRecognizer{
 			}
 		}
 		double sum=0.0;
+		double max=Arrays.stream(candidatesValue).max().orElse(0.0);
 		for(int i=0;i<candidatesValue.length;i++){
-			candidatesValue[i]=Math.exp(candidatesValue[i]);
+			candidatesValue[i]=Math.exp(candidatesValue[i]-max);
 			sum+=candidatesValue[i];
 		}
 		for(int i=0;i<candidatesValue.length;i++){

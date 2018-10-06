@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <training>
 	<models>
-		<model>SVM</model>
 		<model>LINEAR</model>
 	</models>
 	<features>
@@ -27,6 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<feature>MOMENTS</feature>
 		<feature>CROSSING</feature>
 	</features>
+	<small-features>
+		<feature>ASPECT_RATIO</feature>
+		<feature>MOMENTS</feature>
+		<feature>CROSSING</feature>
+	</small-features>
 	<data>
 		<set>
 			<fonts>
@@ -54,6 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</fonts>
 			<styles>
 				<style>PLAIN</style>
+				<!--<style>BOLD</style>-->
+				<!--<style>ITALIC</style>-->
+				<!--<style>BOLD_ITALIC</style>-->
 			</styles>
 			<sizes>
 				<size>10</size>
@@ -63,28 +70,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</scales>
 			<codepoints>
 				<list>
-					!#$&amp;()*+,./
+					!"#$%&amp;'()*+,-./
 					0123456789:;&lt;=>?@
-					ABCDEFGHIJKLMNOPQRSTUVWXYZ\^_
-					abcdefghijklmnopqrstuvwxyz|
-					§©¬¯±·º
-					ÀÂÄÉÓÔÖ×Üß
-					àáâäçèéêëóôöøü
+					ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
+					abcdefghijklmnopqrstuvwxyz{|}~
+					¡¢£¤¥¦§¨©«¬®¯°±´µ¶·¸»¼½¾¿
+					ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß
+					àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ
 					ˇ˙˜
 					ΓΔΘΛΞΠΣΦΨΩ
 					αβγδεζηθικλμνξπρςστυφχψωϕ
-					ℵ
-					‐–—‘’“”•…′″⃗
-					←→↓↦↪⇒⇔
-					∀∂∃∅∇∈∉∋∏
-					∐∑−√∞∤∫∼
-					≃≅≈
-					≠≡≢≤≥≦≧≫≺≻≼≽
-					⊀⊂⊃⊄⊆⊇⊈⊊⊋⊕⊗⊥
-					⋀⋁⋂⋃⋊⋔⋯
-					⌊⌋⌣〈〉⏟
-					□★
-					ﬀﬁﬂﬃﬄ
+					℘ℵℓ™
+					‐–—‘’“”†‡•…′″⃗
+					←↑→↓↔↕↖↗↘↙↚↛↜↝↞↟
+					↠↡↢↣↤↥↦↧↨↩↪↫↬↭↮↯
+					↰↱↲↳↴↵↶↷↸↹↺↻↼↽↾↿
+					⇀⇁⇂⇃⇄⇅⇆⇇⇈⇉⇊⇋⇌⇍⇎⇏
+					⇐⇑⇒⇓⇔⇕⇖⇗⇘⇙⇚⇛⇜⇝⇞⇟
+					∀∁∂∃∄∅∆∇∈∉∊∋∌∍∎∏
+					∐∑−∓∔∕∖∗∘∙√∛∜∝∞∟
+					∠∡∢∣∤∥∦∧∨∩∪∫∬∭∮∯
+					∰∱∲∳∴∵∶∷∸∹∺∻∼∽∾∿
+					≀≁≂≃≄≅≆≇≈≉≊≋≌≍≎≏
+					≐≑≒≓≔≕≖≗≘≙≚≛≜≝≞≟
+					≠≡≢≣≤≥≦≧≨≩≪≫≬≭≮≯
+					≰≱≲≳≴≵≶≷≸≹≺≻≼≽≾≿
+					⊀⊁⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋⊌⊍⊎⊏
+					⊐⊑⊒⊓⊔⊕⊖⊗⊘⊙⊚⊛⊜⊝⊞⊟
+					⊠⊡⊢⊣⊤⊥⊦⊧⊨⊩⊪⊫⊬⊭⊮⊯
+					⊰⊱⊲⊳⊴⊵⊶⊷⊸⊹⊺⊻⊼⊽⊾⊿
+					⋀⋁⋂⋃⋄⋅⋆⋇⋈⋉⋊⋋⋌⋍⋎⋏
+					⋐⋑⋒⋓⋔⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟
+					⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩⋪⋫⋬⋭⋮⋯
+					⋰⋱⋲⋳⋴⋵⋶⋷⋸⋹⋺⋻⋼⋽⋾⋿
+					⌈⌉⌊⌋⌢⌣〈〉⏞⏟
+					■□▲△▶▷▼▽◀◁★♭♮
+					ﬀﬁﬂﬃﬄﬅﬆ
 				</list>
 			</codepoints>
 		</set>

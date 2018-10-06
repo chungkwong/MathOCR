@@ -17,6 +17,7 @@
 package com.github.chungkwong.mathocr.text;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.common.*;
+import com.github.chungkwong.mathocr.text.structure.*;
 import java.util.*;
 /**
  *
@@ -32,15 +33,22 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 		CharacterRecognizer recognizer=CharacterRecognizers.REGISTRY.get();
 		CharacterList list=ModelManager.getCharacterList();
 		Object model=ModelManager.getModel(recognizer.getModelType());
+		CharacterList smallList=ModelManager.getSmallCharacterList();
+		Object smallModel=ModelManager.getSmallModel(recognizer.getModelType());
 		List<ConnectedComponent> components=block.getComponents();
 		fixContaining(components);
-		//TODO fix split character
+		int threhold=estimateSmallThrehold(components);
 		Collections.sort(components,ConnectedComponent.FROM_LEFT);
 		List<NavigableSet<CharacterCandidate>> symbols=new ArrayList<>(components.size());
 		for(Iterator<ConnectedComponent> iterator=components.iterator();iterator.hasNext();){
 			ConnectedComponent next=iterator.next();
-			symbols.add(recognizer.recognize(next,model,list));
+			if(next.getWidth()<threhold&&next.getHeight()<threhold){
+				symbols.add(recognizer.recognize(next,smallModel,smallList));
+			}else{
+				symbols.add(recognizer.recognize(next,model,list));
+			}
 		}
+		fixSplitCharacter(symbols,components,recognizer,list,model);
 		return Collections.singletonList(symbols);
 	}
 	private void fixContaining(List<ConnectedComponent> components){
@@ -103,5 +111,65 @@ public class SptialCharacterSegmenter implements CharacterSegmenter{
 				iter.remove();
 			}
 		}
+	}
+	private int estimateSmallThrehold(List<ConnectedComponent> components){
+		if(components.size()<5){
+			return 0;
+		}
+		return median(components.stream().mapToInt((c)->Math.max(c.getHeight(),c.getWidth())).toArray())/3;
+	}
+	private int median(int... num){
+		if(num.length==0){
+			return Symbol.DEFAULT_SIZE;
+		}
+		Arrays.sort(num);
+		return num[num.length/2];
+	}
+	private void fixSplitCharacter(List<NavigableSet<CharacterCandidate>> symbols,List<ConnectedComponent> components,
+			CharacterRecognizer recognizer,CharacterList list,Object model){
+		List<Integer> neighbors=new ArrayList<>();
+		for(int i=0;i<components.size();i++){
+			ConnectedComponent first=components.get(i);
+			if(symbols.get(i)==null||!canBePartOfOther(symbols.get(i))){
+				continue;
+			}
+			neighbors.clear();
+			int threhold=Math.max(first.getWidth(),first.getHeight());
+			int found=0;
+			double minScore=symbols.get(i).first().getScore();
+			for(int j=i+1;j<components.size();j++){
+				if(symbols.get(j)==null||!canBePartOfOther(symbols.get(j))){
+					continue;
+				}
+				ConnectedComponent second=components.get(j);
+				if(second.getLeft()>first.getRight()){
+					break;
+				}else if(second.getBottom()>=first.getTop()-threhold/2&&second.getTop()<=first.getBottom()+threhold/2
+						&&second.getTop()>=first.getTop()-threhold*3/2&&second.getBottom()<=first.getBottom()+threhold*3/2
+						&&second.getRight()<first.getRight()+threhold/4){
+					neighbors.add(j);
+					if(symbols.get(j).first().getScore()<minScore){
+						minScore=symbols.get(j).first().getScore();
+					}
+					if(neighbors.size()>=3){
+						break;
+					}
+				}
+			}
+			if(neighbors.size()>=1&&neighbors.size()<=2){
+				ConnectedComponent alternative=new ConnectedComponent(first.getBox());
+				alternative.getRunLengths().addAll(first.getRunLengths());
+				neighbors.forEach((j)->alternative.combineWith(components.get(j)));
+				NavigableSet<CharacterCandidate> candidates=recognizer.recognize(alternative,model,list);
+				if(!candidates.isEmpty()&&candidates.first().getScore()>minScore){
+					symbols.set(i,candidates);
+					neighbors.forEach((j)->symbols.set(j,null));
+				}
+			}
+		}
+		symbols.removeIf((s)->s==null);
+	}
+	private boolean canBePartOfOther(NavigableSet<CharacterCandidate> symbol){
+		return "√∫∬∭∮∯∰∱∲∳∑∏Σ".indexOf(symbol.first().getCodePoint())==-1;
 	}
 }

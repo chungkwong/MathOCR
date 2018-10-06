@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.common.*;
 import java.awt.*;
@@ -31,10 +31,15 @@ class SingleCharacterTest{
 	private final CharacterList list;
 	private final CharacterRecognizer recognizer;
 	private final ConfusionMatrix matrix=new ConfusionMatrix();
+	private final boolean strict;
 	public SingleCharacterTest(Object model,CharacterList list,CharacterRecognizer recognizer){
+		this(model,list,recognizer,true);
+	}
+	public SingleCharacterTest(Object model,CharacterList list,CharacterRecognizer recognizer,boolean strict){
 		this.model=model;
 		this.list=list;
 		this.recognizer=recognizer;
+		this.strict=strict;
 		System.out.println("Testing:");
 	}
 	public void addSample(BufferedImage image,int codePoint){
@@ -49,7 +54,9 @@ class SingleCharacterTest{
 				geuss.clear();
 				geuss.add(new CharacterCandidate(errata.first().getKey(),1,null,0,"",0,0));
 			}*/
-			if(geuss.stream().mapToInt((CharacterCandidate c)->c.getCodePoint()).anyMatch((c)->c==codePoint)){//||isEquivent(c,codePoint))){
+			if(geuss.stream().mapToInt((CharacterCandidate c)->c.getCodePoint()).anyMatch((c)->c==codePoint)){
+				matrix.advanceFrequency(codePoint,codePoint);
+			}else if(!strict&&geuss.stream().mapToInt((CharacterCandidate c)->c.getCodePoint()).anyMatch((c)->isEquivent(c,codePoint))){
 				matrix.advanceFrequency(codePoint,codePoint);
 			}else{
 				matrix.advanceFrequency(codePoint,geuss.first().getCodePoint());
@@ -98,15 +105,17 @@ class SingleCharacterTest{
 			case '•':
 				return c1=='.';
 			case '−':
-				return c1=='¯'||c1=='–'||c1=='‐'||c1=='—'||c1=='_';
+				return c1=='¯'||c1=='–'||c1=='‐'||c1=='—'||c1=='_'||c1=='-';
 			case '¯':
-				return c1=='–'||c1=='‐'||c1=='—'||c1=='_';
+				return c1=='–'||c1=='‐'||c1=='—'||c1=='_'||c1=='-';
 			case '–':
-				return c1=='‐'||c1=='—'||c1=='_';
+				return c1=='‐'||c1=='—'||c1=='_'||c1=='-';
 			case '‐':
-				return c1=='—'||c1=='_';
+				return c1=='—'||c1=='_'||c1=='-';
 			case '—':
-				return c1=='_';
+				return c1=='_'||c1=='-';
+			case '_':
+				return c1=='-';
 			case '1':
 				return c1=='l'||c1=='I'||c1=='|';
 			case 'l':
@@ -134,7 +143,7 @@ class SingleCharacterTest{
 	}
 	public static SingleCharacterTest buildModel(InputStream discriptor,CharacterRecognizer recognizer) throws Exception{
 		System.out.println("Training:");
-		return buildModel(TrainSet.load(discriptor).train(false),recognizer);
+		return buildModel(TrainSet.load(discriptor).train(false,false),recognizer);
 	}
 	public static SingleCharacterTest buildModel(Font[] fonts,int[] codePoints,CharacterRecognizer recognizer,List<String> features){
 		System.out.println("Training:");
@@ -153,5 +162,8 @@ class SingleCharacterTest{
 	}
 	public static SingleCharacterTest loadModel(CharacterRecognizer classifier,File data){
 		return new SingleCharacterTest(ModelManager.getModel(classifier.getModelType(),data),ModelManager.getCharacterList(data),classifier);
+	}
+	public static SingleCharacterTest loadModel(CharacterRecognizer classifier,File data,boolean strict){
+		return new SingleCharacterTest(ModelManager.getModel(classifier.getModelType(),data),ModelManager.getCharacterList(data),classifier,strict);
 	}
 }

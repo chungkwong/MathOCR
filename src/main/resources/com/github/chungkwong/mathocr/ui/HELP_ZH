@@ -1,5 +1,11 @@
 MathOCR帮助文档
 
+数学公式识别
+
+数学公式识别的一般流程如下：
+(1) 在"文件"菜单中选"数学公式识别"
+(2) 在文件对话框中选择一张数学公式图片
+
 
 文档识别
 
@@ -82,3 +88,5 @@ import com.github.chungkwong.mathocr.*;
 (3) 构造列表对象并把各页图像放入列表中（接受File、URL、InputStream或BufferedImage）
 (4) 进行识别（假设上述列表叫pages）
 new PipeLine(pages.iterator()).getResult();
+
+另外，静态方法PipeLine.recognizeLatexFormula(BufferedImage image)可用于识别数学公式.

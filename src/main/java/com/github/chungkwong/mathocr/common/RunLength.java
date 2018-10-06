@@ -20,9 +20,10 @@ package com.github.chungkwong.mathocr.common;
  * A data structure represent runlength of a image
  */
 public final class RunLength implements Comparable<RunLength>{
-	int x,y,count;
+	int x, y, count;
 	/**
 	 * Construct a RunLength
+	 *
 	 * @param y the y coordinate
 	 * @param x the x coordinate
 	 * @param count the length of the RunLength - 1
@@ -34,6 +35,7 @@ public final class RunLength implements Comparable<RunLength>{
 	}
 	/**
 	 * Get the x coordinate
+	 *
 	 * @return the x coordinate
 	 */
 	public int getX(){
@@ -41,6 +43,7 @@ public final class RunLength implements Comparable<RunLength>{
 	}
 	/**
 	 * Get the y coordinate
+	 *
 	 * @return the y coordinate
 	 */
 	public int getY(){
@@ -48,6 +51,7 @@ public final class RunLength implements Comparable<RunLength>{
 	}
 	/**
 	 * Get the length - 1
+	 *
 	 * @return length - 1
 	 */
 	public int getCount(){
@@ -55,6 +59,7 @@ public final class RunLength implements Comparable<RunLength>{
 	}
 	/**
 	 * Reset a RunLength
+	 *
 	 * @param y the y coordinate
 	 * @param x the x coordinate
 	 * @param count the length of the RunLength - 1
@@ -66,14 +71,22 @@ public final class RunLength implements Comparable<RunLength>{
 	}
 	/**
 	 * Compare RunLength by y and x coordinate
+	 *
 	 * @param opd the RunLength to compare
 	 * @return -1,0 or 1
 	 */
+	@Override
 	public int compareTo(RunLength opd){
-		if(y<opd.y||(y==opd.y&&x<opd.x))
+		if(y<opd.y||(y==opd.y&&x<opd.x)){
 			return -1;
-		if(y==opd.y&&x==opd.x)
+		}
+		if(y==opd.y&&x==opd.x){
 			return 0;
+		}
 		return 1;
+	}
+	@Override
+	public String toString(){
+		return y+":"+x+":"+count;
 	}
 }

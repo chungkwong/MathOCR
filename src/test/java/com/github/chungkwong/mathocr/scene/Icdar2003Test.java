@@ -88,6 +88,6 @@ public class Icdar2003Test extends LocalizationTest{
 	public static void main(String[] args) throws Exception{
 		//new Icdar2003Test().test(new ContrastDetector());
 		//new Icdar2003Test().test(new ContrastDetector());
-		new Icdar2003Test().test(new ContrastDetector());
+		new Icdar2003Test().test(new ColorDetector());
 	}
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.common.*;
 import java.io.*;
@@ -29,7 +29,6 @@ import libsvm.*;
 public class LinkageTest{
 	public static final int TOP=-1, HORIZONTAL=0, UPPER=1, UNDER=2, LSUP=5, LSUB=6, RSUB=3, RSUP=4;
 	private static final String TRAIN_FILE="../datasets/InftyCDB-1-6152/InftyCDB-1/InftyCDB-1/InftyCDB-1.csv";
-	private static final String LINK_MODEL="src/main/resources/com/github/chungkwong/mathocr/resources/linkage.svm";
 	private static svm_model model;
 	public static int classifyLinkage(BoundBox box,BoundBox parentBox){
 		if(box.getLeft()<=parentBox.getRight()&&parentBox.getLeft()<=parentBox.getRight()){

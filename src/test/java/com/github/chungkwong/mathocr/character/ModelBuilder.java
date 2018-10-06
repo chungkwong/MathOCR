@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.*;
 import java.io.*;
 /**
@@ -25,6 +25,7 @@ public class ModelBuilder{
 	public static void main(String[] args) throws Exception{
 		//buildModel(".mathocr/chinese","chinese_train_set.xml");
 		buildModel(".mathocr/default","math_train_set.xml");
+		//buildModel(".mathocr/simple","im2latex_train_set.xml");
 		//buildModel(".mathocr/infty","infty_train_set.xml");
 	}
 	public static void buildModel(String output,String input) throws Exception{

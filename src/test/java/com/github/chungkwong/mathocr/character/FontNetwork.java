@@ -1,4 +1,4 @@
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 ///*
 // * Copyright (C) 2018 Chan Chung Kwong
 // *

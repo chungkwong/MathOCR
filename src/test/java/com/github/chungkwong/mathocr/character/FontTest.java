@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.chungkwong.mathocr.text;
+package com.github.chungkwong.mathocr.character;
 import com.github.chungkwong.mathocr.character.*;
 import com.github.chungkwong.mathocr.character.classifier.*;
 import com.github.chungkwong.mathocr.character.feature.*;
@@ -77,6 +77,17 @@ public class FontTest{
 		CharacterRecognizer recognizer=new LinearClassifier();
 		testFont(codePoint,test,train,recognizer,Arrays.asList(AspectRatio.NAME,Gradient.FULL_NAME,Grid.NAME,Moments.NAME,CrossNumber.NAME));
 	}
+	public static void testPunct(){
+		int[] codePoint=(",.'‘’，。、`").codePoints().toArray();
+		//int[] codePoint=IntStream.rangeClosed(0,0x10FFFF).filter((c)->Character.UnicodeScript.of(c)==Character.UnicodeScript.HAN).toArray();
+		Font[] base=new Font[]{Font.decode("文泉驿正黑"),Font.decode("文泉驿微米黑"),Font.decode("Droid Sans Fallback"),Font.decode("AR PL UMing CN"),Font.decode("AR PL UKai CN"),Font.decode("Noto Sans CJK SC"),};
+		float[] size=new float[]{8,10,14};
+		int[] style=new int[]{Font.PLAIN,Font.ITALIC,Font.BOLD};
+		Font[] test=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getScaleInstance(2,2)});
+		Font[] train=getFontCombination(base,size,style,new AffineTransform[]{AffineTransform.getTranslateInstance(8,8)});
+		CharacterRecognizer recognizer=new LinearClassifier();
+		testFont(codePoint,test,train,recognizer,Arrays.asList(AspectRatio.NAME,CrossNumber.NAME,Moments.NAME));
+	}
 	private static Font[] getFontCombination(Font[] base,float[] size,int[] style,AffineTransform[] transform){
 		Font[] fonts=new Font[base.length*size.length*style.length*transform.length];
 		int i=0;
@@ -124,7 +135,8 @@ public class FontTest{
 		return new ConnectedComponent(bi);
 	}
 	public static void main(String[] args){
-		testFontChinese();
+		testPunct();
+		//testFontChinese();
 		//testFontAlphanum();
 	}
 }

@@ -26,7 +26,7 @@ import java.nio.file.*;
  */
 public class ModelManager{
 	private static String path;
-	private static CharacterList list;
+	private static CharacterList list, smallList;
 	private static ErrataList erratas;
 	private static Map<String,Object> models=new HashMap<>();
 	public static CharacterList getCharacterList(){
@@ -38,8 +38,12 @@ public class ModelManager{
 			return CharacterList.read(new File(data,"index"));
 		}catch(IOException ex){
 			Logger.getLogger(ModelManager.class.getName()).log(Level.SEVERE,null,ex);
-			return null;
+			return new CharacterList(new ArrayList<>());
 		}
+	}
+	public static CharacterList getSmallCharacterList(){
+		loadDefault();
+		return smallList;
 	}
 	public static ErrataList getErrataList(){
 		loadDefault();
@@ -62,15 +66,25 @@ public class ModelManager{
 					Files.copy(ModelManager.class.getResourceAsStream("default/index"),new File(directory,"index").toPath());
 					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR"),new File(directory,"LINEAR").toPath());
 					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR_f"),new File(directory,"LINEAR_f").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/index"),new File(directory,"index").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR"),new File(directory,"LINEAR").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR_f"),new File(directory,"LINEAR_f").toPath());
 				}catch(IOException ex){
 					Logger.getLogger(ModelManager.class.getName()).log(Level.SEVERE,"Failed to load model,please set data directory",ex);
 				}
 			}
-			list=getCharacterList(new File(currPath));
+			File dir=new File(currPath);
+			list=getCharacterList(dir);
+			smallList=getCharacterList(new File(dir.getParent(),dir.getName()+"_small"));
 			erratas=getErrataList(new File(currPath));
 			path=currPath;
 			models.clear();
 		}
+	}
+	public static Object getSmallModel(String type){
+		loadDefault();
+		File dir=new File(path);
+		return getModel(type,new File(dir.getParent(),dir.getName()+"_small"));
 	}
 	public static Object getModel(String type){
 		loadDefault();

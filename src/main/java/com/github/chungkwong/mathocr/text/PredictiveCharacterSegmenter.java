@@ -36,9 +36,12 @@ public class PredictiveCharacterSegmenter implements CharacterSegmenter{
 		CharacterRecognizer recognizer=CharacterRecognizers.REGISTRY.get();
 		CharacterList list=ModelManager.getCharacterList();
 		Object model=ModelManager.getModel(recognizer.getModelType());
+		CharacterList smallList=ModelManager.getSmallCharacterList();
+		Object smallModel=ModelManager.getSmallModel(recognizer.getModelType());
 		int lineWidth=block.getBox().getWidth();
 		int lineHeight=block.getBox().getHeight();
 		int maxCharacterWidth=(int)(lineHeight*MAX_ASPECT_RATIO);
+		int threhold=lineHeight/3;
 		int expectedCharacterWidth=Math.min(estimateNonSpaceWidth(block),maxCharacterWidth);
 		List<ConnectedComponent> components=block.getComponents();
 		for(int i=0;i<components.size();i++){
@@ -56,7 +59,7 @@ public class PredictiveCharacterSegmenter implements CharacterSegmenter{
 						}
 						remainder=component.splitHorizontally(component.getLeft()+expectedCharacterWidth);
 					}
-					NavigableSet<CharacterCandidate> candidates=recognizer.recognize(component,model,list);
+					NavigableSet<CharacterCandidate> candidates=component.getWidth()<threhold&&component.getHeight()<threhold?recognizer.recognize(component,smallModel,smallList):recognizer.recognize(component,model,list);
 					if(!candidates.isEmpty()&&(bestCandidates==null||candidates.first().getScore()>bestCandidates.first().getScore())){
 						bestCandidates=candidates;
 						if(remainder!=null){

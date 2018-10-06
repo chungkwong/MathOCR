@@ -13,19 +13,23 @@ or (at your option) any later version.
 
 ## Usage
 
+Java 8 or above is required.
+
 ### Prebuilt JAR
 
 A prebuilt JAR is available at https://oss.sonatype.org/content/repositories/snapshots/com/github/chungkwong/mathocr/1.0-SNAPSHOT
 
 ### Build from source
 
-1. Clone the project: `https://github.com/chungkwong/MathOCR.git`
+1. Clone the project: `git clone https://github.com/chungkwong/MathOCR.git`
 2. Get into the directory: `cd MathOCR`
 3. Edit the file `src/test/resources/com/github/chungkwong/mathocr/text/math_train_set.xml`
     - Ensure that path to the fonts are correct
     - Ensure all the characters needed to be recognized are listed
-4. Train the model: `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.text.ModelBuilder" -Dexec.classpathScope="test"`
-5. Link or copy the model to the project: `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+4. Train the model: `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.character.ModelBuilder" -Dexec.classpathScope="test"`
+5. Link or copy the model to the project:
+    - `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+    - `ln -s ~/.mathocr/default_small/ src/main/resources/com/github/chungkwong/mathocr/character/default_small`
 6. Build the JAR: `mvn package`
 
 ### Run
@@ -70,10 +74,19 @@ then a GUI interface should appear.
 			- Built-in OCR engine:
 				1. Split text line into character：
 					- Projection
-				2. Recognize each character:
+                    - Connected component
+                    - Predictive(For fixed width characters)
+                2. Extract features
+                    - Aspect ratio
+                    - Moments
+                    - Density
+                    - Gradient
+                    - Crossing
+				3. Recognize each character:
 					- SVM
 					- MSE
-				3. Structural analysis
+				4. Structural analysis
+                    - Recursive XY cut
 			- External OCR engine
 				- Tesseract
 				- GOCR
@@ -132,9 +145,11 @@ MathOCR是一个用Java语言编写的印刷体科技文档识别系统。
 MathOCR具备基本的图形预处理、版面分析和字符识别能力，特别是能够识别数学公式。
 MathOCR不依赖于其它OCR软件。
 
-MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下发布。
+MathOCR在GNU Affero通用公共许可证版本3或（按你的意愿）更新版本下发布。
 
 ## 用法
+
+请确保已安装好Java 8或以上。
 
 ### 二进制包
 
@@ -147,8 +162,10 @@ MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下
 3. 编辑文件 `src/test/resources/com/github/chungkwong/mathocr/text/math_train_set.xml`
     - 确保训练用字体路径正确
     - 确保需要识别的字符都已列出
-4. 训练模型： `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.text.ModelBuilder" -Dexec.classpathScope="test"`
-5. 把模型连接或复制到项目: `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+4. 训练模型： `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.character.ModelBuilder" -Dexec.classpathScope="test"`
+5. 把模型连接或复制到项目:
+    - `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
+    - `ln -s ~/.mathocr/default_small/ src/main/resources/com/github/chungkwong/mathocr/character/default_small`
 6. 构建JAR: `mvn package`
 
 ### 运行
@@ -167,6 +184,13 @@ MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下
 把`S`和`s`等形状雷同字符视为相同的话可达96%。
 对于宽度或高度特别小的字符如圆点或竖线特别容易出错。
 - 在InftyCDB1数据集上，上下标判定的准确率可达98.57%。
+- 在IM2LATEX-100K数据集上，BLEU值仅约为10，但这个低BLEU值很大程度上来源于图片的低分辨率，
+在同样这些公式但更大一些的图片可取得超过50的BLEU。
+
+根据阁下的应用场景，可以作以下调整以平衡准确度和时空开销：
+- 通过把字符分类器设为一对一的SVM而非默认的一对多LINEAR往往可以提高准确率但模型需要占用
+更大空间，识别速度也会明显下降。
+- 把待识别的字符集设为以场景容许的字符集以避免识别不出一些字符或识别出不合法的字符。
 
 ## 工作原理
 
@@ -200,13 +224,22 @@ MathOCR在GNU通用公共许可证版本3或（按你的意愿）更新版本下
 		1. 把文本块切分为行，日前支持：
 			- 投影
 		2. 识别各行的内容，目前支持：
-			- 内置识别器
+			- 内置识别器（一个用于区分普通字符，另外一个用于句号和逗号等小符号）
 				1. 字符切分，目前支持：
 					- 连通域分析
-				2. 单字符识别，目前支持：
-					- SVM
+					- 投影
+					- 预测（只适用于字符等宽的普通行）
+				2. 提取字符特征，日前支持：
+					- 网格方向特征（轮廓或内部）
+					- 宽高比
+					- 网格密度
+					- 低阶矩
+					- 穿线数
+				3. 单字符识别，目前支持：
+					- SVM（线性或RBF核）
 					- 距离
-				3. 结构分析（有待完善，如支持数学公式和语言模型）
+				4. 结构分析（有待完善，如支持语言模型），目前支持：
+					- 递归XY切分
 			- 外部识别器
 				- Tesseract
 				- GOCR
