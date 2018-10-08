@@ -60,22 +60,23 @@ public class ModelManager{
 		String currPath=ENVIRONMENT.getString("DATA_DIRECTORY");
 		if(!currPath.equals(path)||list==null){
 			File directory=new File(currPath);
-			if(!directory.exists()){
+			File directorySmall=new File(directory.getParentFile(),directory.getName()+"_small");
+			if(!directory.exists()||!directorySmall.exists()){
 				try{
 					directory.mkdirs();
+					directorySmall.mkdirs();
 					Files.copy(ModelManager.class.getResourceAsStream("default/index"),new File(directory,"index").toPath());
 					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR"),new File(directory,"LINEAR").toPath());
 					Files.copy(ModelManager.class.getResourceAsStream("default/LINEAR_f"),new File(directory,"LINEAR_f").toPath());
-					Files.copy(ModelManager.class.getResourceAsStream("default_small/index"),new File(directory,"index").toPath());
-					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR"),new File(directory,"LINEAR").toPath());
-					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR_f"),new File(directory,"LINEAR_f").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/index"),new File(directorySmall,"index").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR"),new File(directorySmall,"LINEAR").toPath());
+					Files.copy(ModelManager.class.getResourceAsStream("default_small/LINEAR_f"),new File(directorySmall,"LINEAR_f").toPath());
 				}catch(IOException ex){
 					Logger.getLogger(ModelManager.class.getName()).log(Level.SEVERE,"Failed to load model,please set data directory",ex);
 				}
 			}
-			File dir=new File(currPath);
-			list=getCharacterList(dir);
-			smallList=getCharacterList(new File(dir.getParent(),dir.getName()+"_small"));
+			list=getCharacterList(directory);
+			smallList=getCharacterList(directorySmall);
 			erratas=getErrataList(new File(currPath));
 			path=currPath;
 			models.clear();
@@ -84,7 +85,7 @@ public class ModelManager{
 	public static Object getSmallModel(String type){
 		loadDefault();
 		File dir=new File(path);
-		return getModel(type,new File(dir.getParent(),dir.getName()+"_small"));
+		return getModel(type,new File(dir.getParentFile(),dir.getName()+"_small"));
 	}
 	public static Object getModel(String type){
 		loadDefault();
@@ -102,3 +103,4 @@ public class ModelManager{
 		}
 	}
 }
+

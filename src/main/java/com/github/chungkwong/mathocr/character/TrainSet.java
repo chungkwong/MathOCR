@@ -90,7 +90,7 @@ public class TrainSet{
 	}
 	public void train(File directory,boolean addSimpleSample){
 		train(addSimpleSample,false).train(classifier,directory);
-		train(false,true).train(classifier,new File(directory.getParent(),directory.getName()+"_small"));
+		train(false,true).train(classifier,new File(directory.getParentFile(),directory.getName()+"_small"));
 	}
 	public DataSet train(boolean addSpecialSample,boolean smallOnly){
 		DataSet dataSet=new DataSet(smallOnly?smallFeatures:features);
@@ -346,3 +346,4 @@ public class TrainSet{
 		}
 	}
 }
+
