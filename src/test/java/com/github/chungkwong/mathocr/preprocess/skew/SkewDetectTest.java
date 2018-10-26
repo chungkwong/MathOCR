@@ -24,10 +24,12 @@ import java.nio.file.*;
 import java.util.*;
 import javax.imageio.*;
 /**
- * Test for skew detection methods
+ * Test for skew detection methods Assume that the
+ * dataset(http://www.iit.demokritos.gr/%7Ealexpap/DISEC13/icdar2013_benchmarking_dataset.rar)
+ * is unpacked at <code>../datasets</code>
  */
 public final class SkewDetectTest implements Runnable{
-	private static final int METHOD_COUNT=/*7*/2;
+	private static final int METHOD_COUNT=7;
 	private static final int SAMPLE_COUNT=1550;
 	private static final double MARGIN=Math.PI/1800;
 	private static final Grayscale gray=new Grayscale();
@@ -56,6 +58,7 @@ public final class SkewDetectTest implements Runnable{
 			double detected=0;
 			switch(method){
 				case 0:
+					//detected=new SDetector().detect(image);
 					detected=new PPDetector(new HierarchyStrategy()).detect(image);
 					break;
 				case 1:
@@ -74,6 +77,9 @@ public final class SkewDetectTest implements Runnable{
 					detected=new NNDetector().detect(image);
 					break;
 				case 6:
+					detected=new SDetector().detect(image);
+					break;
+				case 7:
 					detected=new CCDetector().detect(image);
 					break;
 			}
@@ -93,7 +99,7 @@ public final class SkewDetectTest implements Runnable{
 			String[] fields=line.split("\t");
 			if(fields.length==3){
 				try{
-					System.out.println(new File(dir,fields[0]+".tif"));
+					System.err.println(new File(dir,fields[0]+".tif"));
 					BufferedImage image=threhold.apply(gray.apply(ImageIO.read(new File(dir,fields[0]+".tif")),true),true);
 					double truth=-Double.parseDouble(fields[2])*Math.PI/180;
 					Thread[] threads=new Thread[METHOD_COUNT];
@@ -107,7 +113,7 @@ public final class SkewDetectTest implements Runnable{
 						threads[i].join(timeLimit-System.currentTimeMillis());
 						threads[i].stop();
 					}
-					System.out.println(curr++);
+					System.err.println(curr++);
 				}catch(Exception ex){
 					ex.printStackTrace();
 				}

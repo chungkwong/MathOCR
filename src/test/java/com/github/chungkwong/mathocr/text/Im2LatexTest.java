@@ -23,6 +23,8 @@ import java.util.*;
 import java.util.logging.*;
 import javax.imageio.*;
 /**
+ * Assume the dataset is generated using scripts as in
+ * https://github.com/harvardnlp/im2markup/ at ../datasets/im2latex
  *
  * @author Chan Chung Kwong
  */

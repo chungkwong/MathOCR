@@ -85,6 +85,7 @@ public class SwtDetector extends BinaryDetector{
 	private static final int RATIO_THREHOLD=3;
 	private List<LineCandidate> cluster(int[] bitmap,int width,int height){
 		List<Stroke> strokeCluster=strokeCluster(bitmap,width,height);
+		strokeCluster.removeIf((s)->s.getComponent().getWidth()>8*s.getComponent().getHeight()||s.getComponent().getHeight()>8*s.getComponent().getWidth());
 		/*Collections.sort(strokeCluster,Comparator.comparing((s)->s.getComponent().getWidth()*s.getComponent().getHeight()));
 		int old=-1, count=0;
 		for(Stroke s:strokeCluster){
@@ -99,11 +100,12 @@ public class SwtDetector extends BinaryDetector{
 		System.out.println(old+":"+count);*/
 		List<LineCandidate> lines=roughClusterLine(strokeCluster);
 		refineLines(lines);
-		lines.removeIf((line)->line.getBox().getWidth()>width/2||line.getBox().getHeight()>height/2);
+		//lines.removeIf((line)->line.getBox().getWidth()>width/2||line.getBox().getHeight()>height/2);
 		return lines;
 	}
 	private List<LineCandidate> roughClusterLine(List<Stroke> strokes){
-		/*Partition partition=new Partition((int m,int n)->{
+		List<LineCandidate> lines=strokes.stream().map((s)->new LineCandidate(((Stroke)s).getComponent())).collect(Collectors.toCollection(ArrayList::new));
+		Partition partition=new Partition((int m,int n)->{
 			lines.get(n).merge(lines.get(m));
 			lines.set(m,null);
 		},strokes.size());
@@ -116,8 +118,7 @@ public class SwtDetector extends BinaryDetector{
 				}
 			}
 		}
-		lines.removeIf((c)->c==null);*/
-		List<LineCandidate> lines=strokes.stream().map((s)->new LineCandidate(((Stroke)s).getComponent())).collect(Collectors.toCollection(ArrayList::new));
+		lines.removeIf((c)->c==null||c.getComponents().size()<=1);
 		/*Partition partition=new Partition((int m,int n)->{
 			lines.get(n).merge(lines.get(m));
 			lines.set(m,null);
@@ -188,7 +189,7 @@ public class SwtDetector extends BinaryDetector{
 		int distance=Edge.calculateDistance(from,to);
 		if(distance>Math.max(
 				Math.max(from.getComponent().getWidth(),to.getComponent().getWidth()),
-				Math.max(from.getComponent().getHeight(),to.getComponent().getHeight()))){
+				Math.max(from.getComponent().getHeight(),to.getComponent().getHeight()))/3){
 			return false;
 		}
 		return true;

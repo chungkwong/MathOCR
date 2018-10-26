@@ -28,8 +28,8 @@ A prebuilt JAR is available at https://oss.sonatype.org/content/repositories/sna
     - Ensure all the characters needed to be recognized are listed
 4. Train the model: `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.character.ModelBuilder" -Dexec.classpathScope="test"`
 5. Link or copy the model to the project:
-    - `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
-    - `ln -s ~/.mathocr/default_small/ src/main/resources/com/github/chungkwong/mathocr/character/default_small`
+    - `ln -s ~/.mathocr/default src/main/resources/com/github/chungkwong/mathocr/character/default`
+    - `ln -s ~/.mathocr/default_small src/main/resources/com/github/chungkwong/mathocr/character/default_small`
 6. Build the JAR: `mvn package`
 
 ### Run
@@ -164,8 +164,8 @@ MathOCR在GNU Affero通用公共许可证版本3或（按你的意愿）更新�
     - 确保需要识别的字符都已列出
 4. 训练模型： `mvn exec:java -Dexec.mainClass="com.github.chungkwong.mathocr.character.ModelBuilder" -Dexec.classpathScope="test"`
 5. 把模型连接或复制到项目:
-    - `ln -s ~/.mathocr/default/ src/main/resources/com/github/chungkwong/mathocr/character/default`
-    - `ln -s ~/.mathocr/default_small/ src/main/resources/com/github/chungkwong/mathocr/character/default_small`
+    - `ln -s ~/.mathocr/default src/main/resources/com/github/chungkwong/mathocr/character/default`
+    - `ln -s ~/.mathocr/default_small src/main/resources/com/github/chungkwong/mathocr/character/default_small`
 6. 构建JAR: `mvn package`
 
 ### 运行

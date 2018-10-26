@@ -23,6 +23,9 @@ import java.nio.file.*;
 import java.util.*;
 import libsvm.*;
 /**
+ * Assume that the
+ * dataset(http://www.inftyproject.org/download/inftydb/InftyCDB-1.zip) is
+ * unpacked at <code>../datasets</code>
  *
  * @author Chan Chung Kwong
  */

@@ -106,7 +106,6 @@
 	</repositories>
 	<build>
 		<plugins>
-
 			<plugin>
 				<!-- Build an executable JAR -->
 				<groupId>org.apache.maven.plugins</groupId>

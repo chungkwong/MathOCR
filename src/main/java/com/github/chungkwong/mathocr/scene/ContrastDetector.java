@@ -44,7 +44,8 @@ public class ContrastDetector extends BinaryDetector{
 		for(int i=0;i<components.size();i++){
 			ConnectedComponent curr=components.get(i);
 			int count=0;
-			if(curr.getWidth()<=boxThrehold||curr.getHeight()<boxThrehold){
+			if(curr.getWidth()<=boxThrehold||curr.getHeight()<boxThrehold||curr.getHeight()>300
+					||curr.getWidth()>curr.getHeight()*slopeThrehold||curr.getHeight()>curr.getWidth()*slopeThrehold){
 				toDelete.set(i);
 			}else{
 				for(int j=i+1;j<components.size();j++){
@@ -82,7 +83,7 @@ public class ContrastDetector extends BinaryDetector{
 				}
 			}
 		}
-		lines.removeIf((c)->c==null||c.getComponents().size()<=1||c.getBox().getArea()<=256);
+		lines.removeIf((c)->c==null||c.getComponents().size()<=2||c.getBox().getArea()<=256);
 		return lines;
 	}
 	private boolean isLikelySameCharacter(ConnectedComponent from,ConnectedComponent to){

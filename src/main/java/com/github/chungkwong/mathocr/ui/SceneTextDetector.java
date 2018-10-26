@@ -34,7 +34,7 @@ public class SceneTextDetector extends JSplitPane implements IconPaint,MouseMoti
 	private final JFileChooser fileChooser=new JFileChooser();
 	private final JCheckBox invert=new JCheckBox("Invert",false);
 	private final JComboBox<TextDetector> detectors=new JComboBox<>(new TextDetector[]{
-		new ContrastDetector(),new SwtDetector(),new BackgroundDetector(),new ColorDetector()});
+		new ContrastDetector(),new SwtDetector(),new BackgroundDetector(),new ColorDetector(),new DetextDetector()});
 	private final JLabel icon=new JLabel();
 	public SceneTextDetector(){
 		super();
@@ -60,7 +60,7 @@ public class SceneTextDetector extends JSplitPane implements IconPaint,MouseMoti
 			}
 			textRegions.clear();
 			((TextDetector)detectors.getSelectedItem()).detect(image).forEach((line)->textRegions.add(line.getBound()));
-			//image=CombinedPreprocessor.getDefaultCombinedPreprocessor().apply(image,true);
+			image=CombinedPreprocessor.getDefaultCombinedPreprocessor().apply(image,true);
 			icon.setIcon(new PageIcon(image,this));
 		}catch(IOException ex){
 			Logger.getLogger(SceneTextDetector.class.getName()).log(Level.SEVERE,null,ex);

@@ -75,4 +75,3 @@ public class CharacterList{
 		return new CharacterPrototype(Integer.parseInt(split[0]),box,split[5],Integer.parseInt(split[6]),Integer.parseInt(split[7]),true);
 	}
 }
-

@@ -26,6 +26,9 @@ import java.util.*;
 import java.util.logging.*;
 import javax.imageio.*;
 /**
+ * Assume that the
+ * dataset(https://github.com/myleott/mnist_png/raw/master/mnist_png.tar.gz) is
+ * unpacked at <code>../datasets</code>
  *
  * @author Chan Chung Kwong
  */

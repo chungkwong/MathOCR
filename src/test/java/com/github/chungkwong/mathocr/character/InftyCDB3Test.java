@@ -29,6 +29,10 @@ import java.util.logging.*;
 import javax.imageio.*;
 /**
  *
+ * Assume that the
+ * dataset(http://www.inftyproject.org/download/inftydb/InftyCDB-3.zip) is
+ * unpacked at <code>../datasets</code>
+ *
  * @author Chan Chung Kwong
  */
 public class InftyCDB3Test{

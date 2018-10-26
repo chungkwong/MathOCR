@@ -21,6 +21,11 @@ import java.util.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 /**
+ * Assume that the
+ * dataset(http://www.iapr-tc11.org/dataset/ICDAR2003_RobustReading/TrialTrain/scene.zip
+ * and
+ * http://www.iapr-tc11.org/dataset/ICDAR2003_RobustReading/TrialTest/scene.zip)
+ * is unpacked at <code>../datasets</code>
  *
  * @author Chan Chung Kwong
  */
@@ -86,8 +91,8 @@ public class Icdar2003Test extends LocalizationTest{
 		return Collections.emptyList();
 	}
 	public static void main(String[] args) throws Exception{
-		//new Icdar2003Test().test(new ContrastDetector());
-		//new Icdar2003Test().test(new ContrastDetector());
-		new Icdar2003Test().test(new ColorDetector());
+		//new Icdar2003Test().test(new SwtDetector());
+		new Icdar2003Test().test(new ContrastDetector());
+		//new Icdar2003Test().test(new ColorDetector());
 	}
 }

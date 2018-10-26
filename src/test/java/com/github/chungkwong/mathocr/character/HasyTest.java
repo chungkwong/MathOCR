@@ -8,6 +8,12 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.logging.*;
 import javax.imageio.*;
+/**
+ * Assume that the dataset(https://doi.org/10.5281/zenodo.259444) is unpacked at
+ * <code>../datasets</code>
+ *
+ * @author Chan Chung Kwong
+ */
 public class HasyTest{
 	private static final File DATASETS=new File("../datasets");
 	public static void main(String[] args) throws IOException{

@@ -23,12 +23,13 @@ import com.github.chungkwong.mathocr.character.feature.*;
  * @author Chan Chung Kwong
  */
 public class Features{
-	public static final Registry<Feature> REGISTRY=new Registry<>("FEATURE",new Gradient(5,5,true));
+	public static final Registry<Feature> REGISTRY=new Registry<>("FEATURE",new Gradient(5,5,Gradient.Mask.CONTOUR));
 	static{
 		REGISTRY.register(AspectRatio.NAME,new AspectRatio());
 		REGISTRY.register(Grid.NAME,new Grid(5,5));
-		REGISTRY.register(Gradient.NAME,new Gradient(5,5,true));
-		REGISTRY.register(Gradient.FULL_NAME,new Gradient(5,5,false));
+		REGISTRY.register(Gradient.NAME,new Gradient(5,5,Gradient.Mask.CONTOUR));
+		REGISTRY.register(Gradient.FULL_NAME,new Gradient(5,5,Gradient.Mask.FULL));
+		REGISTRY.register(Gradient.SKELETON_NAME,new Gradient(5,5,Gradient.Mask.SKELETON));
 		REGISTRY.register(Moments.NAME,new Moments());
 		REGISTRY.register(CrossNumber.NAME,new CrossNumber());
 	}

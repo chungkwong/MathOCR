@@ -22,6 +22,8 @@ import java.util.*;
 import java.util.logging.*;
 import java.util.stream.*;
 /**
+ * Assume that the dataset(http://rrc.cvc.uab.es/?ch=8&com=downloads) is unpacked
+ * at <code>../datasets/icdar2017</code>
  *
  * @author Chan Chung Kwong
  */

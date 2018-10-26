@@ -22,7 +22,7 @@ import java.util.*;
  */
 public class Pair<K,V> implements Map.Entry<K,V>{
 	private final K key;
-	private final V value;
+	private V value;
 	public Pair(K key,V value){
 		this.key=key;
 		this.value=value;
@@ -50,6 +50,8 @@ public class Pair<K,V> implements Map.Entry<K,V>{
 	}
 	@Override
 	public V setValue(V value){
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		V old=value;
+		this.value=value;
+		return old;
 	}
 }

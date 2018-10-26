@@ -39,7 +39,7 @@ public class TextualClassifier{
 		return (int)(svm.svm_predict(model,getFeature(ele))+0.5)==1;
 	}
 	public static svm_node[] getFeature(ConnectedComponent ele){
-		double[] extract=new Gradient(5,5,true).extract(ele);
+		double[] extract=new Gradient(5,5,Gradient.Mask.CONTOUR).extract(ele);
 		svm_node[] vector=new svm_node[extract.length];
 		for(int i=0;i<extract.length;i++){
 			svm_node node0=new svm_node();

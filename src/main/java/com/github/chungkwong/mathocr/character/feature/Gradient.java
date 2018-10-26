@@ -29,28 +29,33 @@ import java.util.*;
  * @author Chan Chung Kwong
  */
 public class Gradient implements VectorFeature{
+	public enum Mask{
+		FULL, CONTOUR, SKELETON
+	};
 	public static final String NAME="GRADIENT";
 	public static final String FULL_NAME="FULL_GRADIENT";
+	public static final String SKELETON_NAME="SKELETON_GRADIENT";
 	private final int m, n;
-	private final boolean contour;
+	private final Mask mask;
 	/**
 	 * Create a gradient feature
 	 *
 	 * @param m rows of grid
 	 * @param n columns of grid
-	 * @param contour only consider contour
+	 * @param mask only consider contour
 	 */
-	public Gradient(int m,int n,boolean contour){
+	public Gradient(int m,int n,Mask mask){
 		this.m=m;
 		this.n=n;
-		this.contour=contour;
+		this.mask=mask;
 	}
 	@Override
 	public int getDimension(){
 		return m*n*4;
 	}
 	public static final byte NONE=0, HORIZONTAL=1, VERTICAL=2, DIAG_DOWN=4, DIAG_UP=8;
-	private static final int DD=3, DX=2;
+	public static final int DD=3;
+	public static final int DX=2;
 	@Override
 	public double[] extract(ConnectedComponent component){
 		double[] vec=new double[m*n*4];
@@ -58,7 +63,11 @@ public class Gradient implements VectorFeature{
 		double scale=Math.max(h*1.0/m,w*1.0/n);
 		double a=m*0.5-(component.getBottom()+component.getTop()+1)*0.5/scale;
 		double b=n*0.5-(component.getLeft()+component.getRight()+1)*0.5/scale;
-		byte[] direction=getStrokeDirection(component);
+		StrokeSpace strokes=getStrokeDirection(component);
+		if(mask==Mask.SKELETON){
+			remainSkeleton(strokes);
+		}
+		byte[] direction=strokes.getDirection();
 		int[] ptv=new int[m+1], pth=new int[n+1];
 		for(int i=0;i<=m;i++){
 			ptv[i]=(int)(scale*(i-a));
@@ -77,7 +86,7 @@ public class Gradient implements VectorFeature{
 							continue;
 						}
 						int pos=(y-component.getTop())*w+(x-component.getLeft());
-						if(contour&&y!=component.getTop()&&y!=component.getBottom()&&x!=component.getLeft()&&x!=component.getRight()){
+						if(mask==Mask.CONTOUR&&y!=component.getTop()&&y!=component.getBottom()&&x!=component.getLeft()&&x!=component.getRight()){
 							if(direction[pos-1]!=NONE&&direction[pos+1]!=NONE
 									&&direction[pos-w]!=NONE&&direction[pos-w-1]!=NONE&&direction[pos-w+1]!=NONE
 									&&direction[pos+w]!=NONE&&direction[pos+w-1]!=NONE&&direction[pos+w+1]!=NONE){
@@ -113,7 +122,7 @@ public class Gradient implements VectorFeature{
 		}
 		return vec;
 	}
-	public static byte[] getStrokeDirection(ConnectedComponent component){
+	public static StrokeSpace getStrokeDirection(ConnectedComponent component){
 		int h=component.getHeight(), w=component.getWidth();
 		int[] nL=new int[w];
 		int[] nwL=new int[w];
@@ -256,41 +265,67 @@ public class Gradient implements VectorFeature{
 				}
 			}
 		}
-//		for(int i=0, ind=0;i<h;i++){
-//			for(int j=0;j<w;j++,ind++){
-//				System.out.print(direction[ind]);
-//			}
-//			System.out.println();
-//		}
-//		try{
-//			BufferedImage image=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
-//			int[] dat=new int[w*h];
-//			for(int i=0;i<direction.length;i++){
-//				dat[i]=0x00000000;
-//				if((direction[i]&horizontal)!=0){
-//					dat[i]|=0xFFFF0000;
-//				}
-//				if((direction[i]&vertical)!=0){
-//					dat[i]|=0xFF00FF00;
-//				}
-//				if((direction[i]&diagDown)!=0){
-//					dat[i]|=0xFF0000FF;
-//				}
-//				if((direction[i]&diagUp)!=0){
-//					dat[i]|=0xFF0000FF;
-//				}
-//			}
-//			image.setRGB(0,0,w,h,dat,0,w);
-//			ImageIO.write(image,"png",new File("/tmp/strokes.png"));
-//		}catch(IOException ex){
-//			Logger.getLogger(Gradient.class.getName()).log(Level.SEVERE,null,ex);
-//		}
+		return new StrokeSpace(direction,stroke,w,h);
+	}
+	public static byte[] remainSkeleton(StrokeSpace strokes){
+		int h=strokes.getHeight();
+		int w=strokes.getWidth();
+		byte[] direction=strokes.getDirection();
+		int[] thickness=strokes.getThickness();
+		int[] constant={HORIZONTAL,VERTICAL,DIAG_DOWN,DIAG_UP};
+		int[] dx={-1,0,-1,1};
+		int[] dy={0,-1,-1,-1};
+		int[] dd={DX,DX,DD,DD};
+		for(int i=h-1, ind=direction.length-1;i>=0;i--){
+			for(int j=w-1;j>=0;j--,ind--){
+				int thick=thickness[ind];
+				if(thick>0){
+					for(int l=0;l<4;l++){
+						if((direction[ind]&constant[l])!=0){
+							int t=thick/dd[l];
+							int diff=(dy[l]*w+dx[l]);
+							int pos=ind+diff*(t/2);
+							int i2=i-dy[l];
+							int j2=j-dx[l];
+							if(i2>=0&&i2<h&&j2>=0&&j2<w&&thickness[i2*w+j2]>0){
+								continue;
+							}
+							for(int k=0, p=ind;k<t;k++,p+=diff){
+								if(p==pos){
+									direction[p]|=constant[l];
+								}else{
+									direction[p]&=~constant[l];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return direction;
 	}
 	public static void main(String[] args){
 		Font font=Font.decode(Font.SERIF).deriveFont(24).deriveFont(AffineTransform.getScaleInstance(10,10));
 		ConnectedComponent component=getComponent(font,'永');
-		System.out.println(Arrays.toString(new Gradient(3,3,false).extract(component)));
+		StrokeSpace strokes=getStrokeDirection(component);
+		byte[] direction=remainSkeleton(strokes);
+		int w=strokes.getWidth();
+		int h=strokes.getHeight();
+		int[] constant={HORIZONTAL,VERTICAL,DIAG_DOWN,DIAG_UP};
+		for(int c:constant){
+			for(int i=0, ind=0;i<h;i++){
+				for(int j=0;j<w;j++,ind++){
+					if((direction[ind]&c)!=0){
+						System.out.print("1");
+					}else{
+						System.out.print("0");
+					}
+				}
+				System.out.println();
+			}
+			System.out.println();
+		}
+		System.out.println(Arrays.toString(new Gradient(3,3,Mask.SKELETON).extract(component)));
 	}
 	private static ConnectedComponent getComponent(Font font,int codePoint){
 		FontRenderContext context=new FontRenderContext(null,false,true);
@@ -306,5 +341,28 @@ public class Gradient implements VectorFeature{
 		g2d.setColor(Color.BLACK);
 		g2d.drawGlyphVector(glyphVector,-x,-y);
 		return new ConnectedComponent(bi);
+	}
+	public static class StrokeSpace{
+		private final byte[] direction;
+		private final int[] thickness;
+		private final int width, height;
+		public StrokeSpace(byte[] direction,int[] thickness,int width,int height){
+			this.direction=direction;
+			this.thickness=thickness;
+			this.width=width;
+			this.height=height;
+		}
+		public byte[] getDirection(){
+			return direction;
+		}
+		public int[] getThickness(){
+			return thickness;
+		}
+		public int getWidth(){
+			return width;
+		}
+		public int getHeight(){
+			return height;
+		}
 	}
 }

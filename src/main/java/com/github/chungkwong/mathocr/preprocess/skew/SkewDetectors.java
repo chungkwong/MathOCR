@@ -31,5 +31,6 @@ public class SkewDetectors{
 		REGISTRY.register("HT",new HTDetector(hierarchyStrategy));
 		REGISTRY.register("CC",new CCDetector());
 		REGISTRY.register("NN",new NNDetector());
+		REGISTRY.register("S",new SDetector());
 	}
 }

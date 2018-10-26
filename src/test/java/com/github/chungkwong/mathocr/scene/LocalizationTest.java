@@ -36,8 +36,8 @@ public abstract class LocalizationTest{
 		int count=0;
 		for(Iterator<File> iterator=getSamples();iterator.hasNext();){
 			System.out.println(++count);
+			File file=iterator.next();
 			try{
-				File file=iterator.next();
 				//System.out.println(file);
 				List<BoundBox> detected=detector.detect(ImageIO.read(file)).stream().map((line)->line.getBox()).collect(Collectors.toList());
 				List<BoundBox> given=getTruthBoxes(file);
@@ -49,8 +49,8 @@ public abstract class LocalizationTest{
 				precision+=p;
 				hmean+=r>0||p>0?2*r*p/(r+p):0;
 				System.out.println("precision:"+precision/count+"recall:"+recall/count+"hmean:"+hmean/count);
-			}catch(IOException ex){
-				Logger.getLogger(LocalizationTest.class.getName()).log(Level.SEVERE,null,ex);
+			}catch(Exception ex){
+				Logger.getLogger(LocalizationTest.class.getName()).log(Level.SEVERE,file.getAbsolutePath(),ex);
 			}
 		}
 		Logger.getGlobal().log(Level.INFO,"precision:{0}",precision/count);

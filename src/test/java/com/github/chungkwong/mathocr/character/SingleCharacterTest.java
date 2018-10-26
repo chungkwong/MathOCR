@@ -145,6 +145,10 @@ class SingleCharacterTest{
 		System.out.println("Training:");
 		return buildModel(TrainSet.load(discriptor).train(false,false),recognizer);
 	}
+	public static SingleCharacterTest buildModel(InputStream discriptor,CharacterRecognizer recognizer,boolean strict) throws Exception{
+		System.out.println("Training:");
+		return buildModel(TrainSet.load(discriptor).train(false,false),recognizer,strict);
+	}
 	public static SingleCharacterTest buildModel(Font[] fonts,int[] codePoints,CharacterRecognizer recognizer,List<String> features){
 		System.out.println("Training:");
 		DataSet dataSet=new DataSet(features);
@@ -159,6 +163,12 @@ class SingleCharacterTest{
 		//System.out.println(dataSet.getCharacterList().getCharacters());
 		return new SingleCharacterTest(ModelTypes.REGISTRY.get(recognizer.getModelType()).build(dataSet),
 				dataSet.getCharacterList(),recognizer);
+	}
+	public static SingleCharacterTest buildModel(DataSet dataSet,CharacterRecognizer recognizer,boolean strict){
+		System.out.println("Building:");
+		//System.out.println(dataSet.getCharacterList().getCharacters());
+		return new SingleCharacterTest(ModelTypes.REGISTRY.get(recognizer.getModelType()).build(dataSet),
+				dataSet.getCharacterList(),recognizer,strict);
 	}
 	public static SingleCharacterTest loadModel(CharacterRecognizer classifier,File data){
 		return new SingleCharacterTest(ModelManager.getModel(classifier.getModelType(),data),ModelManager.getCharacterList(data),classifier);
