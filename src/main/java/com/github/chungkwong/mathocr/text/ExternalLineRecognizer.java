@@ -18,10 +18,12 @@ package com.github.chungkwong.mathocr.text;
 import com.github.chungkwong.mathocr.text.structure.Line;
 import java.awt.image.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.logging.*;
 import javax.imageio.*;
 import com.github.chungkwong.mathocr.text.LineRecognizer;
 import java.util.*;
+
 /**
  * Line recognizer using external command
  *
@@ -42,7 +44,7 @@ public class ExternalLineRecognizer implements LineRecognizer{
 	@Override
 	public Line recognize(TextLine block,BufferedImage input){
 		try{
-			File file=File.createTempFile("mathocr",".pbm");
+			File file=Files.createTempFile("mathocr",".pbm").toFile();
 			ImageIO.write(input.getSubimage(block.getBox().getLeft(),block.getBox().getTop(),block.getBox().getRight()-block.getBox().getLeft()+1,block.getBox().getBottom()-block.getBox().getTop()+1),"pnm",file);
 			Process process=Runtime.getRuntime().exec(prefix+file.getAbsolutePath()+suffix);
 			process.waitFor();
