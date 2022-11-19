@@ -19,10 +19,12 @@ import com.github.chungkwong.mathocr.layout.logical.LogicalBlock;
 import com.github.chungkwong.mathocr.layout.logical.Image;
 import java.awt.image.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.*;
 import javax.imageio.*;
 import static com.github.chungkwong.mathocr.Environment.ENVIRONMENT;
+
 /**
  * Image recognizer
  *
@@ -32,7 +34,7 @@ public class ImageRecognizer implements BlockRecognizer{
 	@Override
 	public List<LogicalBlock> recognize(PhysicalBlock block,BufferedImage input){
 		try{
-			File file=File.createTempFile("image",".png",new File(ENVIRONMENT.getString("OUTPUT_FOLDER")));
+			File file=Files.createTempFile(new File(ENVIRONMENT.getString("OUTPUT_FOLDER")).toPath(),"image",".png").toFile();
 			ImageIO.write(input.getSubimage(block.getBox().getLeft(),block.getBox().getTop(),block.getBox().getWidth(),block.getBox().getHeight()),"png",file);
 			return Collections.singletonList(new Image(file.getAbsolutePath(),null,block.getBox()));
 		}catch(Exception ex){
